@@ -45,6 +45,8 @@ public class Cauldron : LookInteractable
     float stirProgress;
 
 
+    public float soundLow, soundHigh; //low & high for the sounds and such
+
     public AudioSource soundSource1, soundSource2;
     //1 is ambient, 2 is more action/incidental based, ex. explosions
 
@@ -64,6 +66,9 @@ public class Cauldron : LookInteractable
         clearIngredientList();
         soundSource1.clip = basicCauldronSound;
         soundSource1.Play();
+        soundSource1.volume = soundLow;
+
+        //amount of changes needed or whatever for increasing stir?
     }
 
     // Update is called once per frame
@@ -107,6 +112,8 @@ public class Cauldron : LookInteractable
         {
             playStirSound();
             stirProgress += stirAddition;
+
+            soundSource1.volume = soundLow + (stirProgress*(soundHigh - soundLow)); //pot gets progressively louder with stirring
             if (stirProgress >= 1)
             {
                 stirProgress = 1;
@@ -150,7 +157,7 @@ public class Cauldron : LookInteractable
 
 
         soundSource2.PlayOneShot(explosionSound);
-
+        soundSource1.volume = soundLow;
 
         clearIngredientList();
         stopWaterEmission();

@@ -5637,6 +5637,7 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 820264495ada52340b69201be387789a, type: 3}
   - {fileID: 8300000, guid: de214c35d1e4e1644bfbcff909f26242, type: 3}
   - {fileID: 8300000, guid: 9fef4d65ac77f20419dd15a4c80fd5f2, type: 3}
+  pitchMod: 0
   talkSource: {fileID: 6614798176497787183}
 --- !u!82 &6614798176497787183
 AudioSource:
@@ -5647,14 +5648,15 @@ AudioSource:
   m_GameObject: {fileID: 6357171946351972882}
   m_Enabled: 1
   serializedVersion: 4
-  OutputAudioMixerGroup: {fileID: 0}
+  OutputAudioMixerGroup: {fileID: 24300001, guid: 1dd706bb85d8aef4e83a6229dbd62c36,
+    type: 2}
   m_audioClip: {fileID: 0}
   m_PlayOnAwake: 1
   m_Volume: 1
   m_Pitch: 1
   Loop: 0
   Mute: 0
-  Spatialize: 0
+  Spatialize: 1
   SpatializePostEffects: 0
   Priority: 128
   DopplerLevel: 1

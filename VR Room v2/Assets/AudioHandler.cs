@@ -8,7 +8,7 @@ public class AudioHandler : MonoBehaviour
     public List<AudioClip> clipList = new List<AudioClip>();
 
 
-    public AudioClip fallSound, ghostSound, entranceSound;
+    public AudioClip fallSound, ghostSound, entranceSound, pickupSound;
 
     public float ghostSoundLevel = 0.5f;
 
@@ -46,6 +46,10 @@ public class AudioHandler : MonoBehaviour
 
     }
 
+    public void playPickupSound(GameObject pickupObj)
+    {
+        AudioSource.PlayClipAtPoint(pickupSound, pickupObj.transform.position);
+    }
 
     public void giveSound(GameObject obj)
     {

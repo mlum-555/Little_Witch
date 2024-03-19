@@ -8,6 +8,8 @@ public class SoundObj : MonoBehaviour
     // Start is called before the first frame update
 
     AudioHandler handler;
+
+    public bool isGlass;
     void Start()
     {
         handler = FindFirstObjectByType(typeof(AudioHandler)).GetComponent<AudioHandler>();
@@ -22,6 +24,6 @@ public class SoundObj : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
-        handler.objectFall(this.gameObject);
+        handler.objectFall(this.gameObject, isGlass) ;
     }
 }

@@ -28,4 +28,10 @@ public class Page : MonoBehaviour
 
         secretPageRenderer.SetBlendShapeWeight(0, thisRenderer.GetBlendShapeWeight(0));
     }
+
+    public void anim(int i, float prog)
+    {
+        thisRenderer.SetBlendShapeWeight(i, prog);
+        copyAnimProg();
+    }
 }

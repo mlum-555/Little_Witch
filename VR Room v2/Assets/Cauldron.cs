@@ -44,6 +44,10 @@ public class Cauldron : LookInteractable
 
     float stirProgress;
 
+    public float bubbleVal, minBubbleVal, maxBubbleVal;
+    //used for uh bubble value?
+    
+
 
     public float soundLow, soundHigh; //low & high for the sounds and such
 
@@ -55,26 +59,36 @@ public class Cauldron : LookInteractable
     public AudioClip basicCauldronSound, largeBubbling;
 
 
+    float colorChangeInterval, colorChangeTimer, colorChangeVal; //set timer to -1 when not changing, or uhh hm
+    //
+
+
     void Start()
     {
        /// mainModule = particle.main;
         waterCol = defaultColor;
+        
         particleMat.color = defaultColor;
         waterRenderer = waterCircle.GetComponentInChildren<Renderer>();
-        waterRenderer.material.EnableKeyword("_EMISSION");
+        waterRenderer.material = new Material(waterRenderer.material);
+
+        waterRenderer.material.SetColor("_Color", waterCol);
+        //waterRenderer.material.EnableKeyword("_EMISSION");
         stopWaterEmission();
         clearIngredientList();
         soundSource1.clip = basicCauldronSound;
         soundSource1.Play();
         soundSource1.volume = soundLow;
 
+        bubbleVal = minBubbleVal;
         //amount of changes needed or whatever for increasing stir?
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+        waterRenderer.material.SetFloat("_bubbleLevel", bubbleVal);
+
     }
 
     private void OnTriggerEnter(Collider potentialIng)
@@ -101,10 +115,9 @@ public class Cauldron : LookInteractable
         }
         
 
-
     }
 
-
+    
 
     public void increasePotStir(float stirAddition)
     {
@@ -112,10 +125,12 @@ public class Cauldron : LookInteractable
         {
             playStirSound();
             stirProgress += stirAddition;
+            bubbleVal = minBubbleVal + ((maxBubbleVal - minBubbleVal) * stirProgress);
 
             soundSource1.volume = soundLow + (stirProgress*(soundHigh - soundLow)); //pot gets progressively louder with stirring
             if (stirProgress >= 1)
             {
+                bubbleVal = maxBubbleVal;
                 stirProgress = 1;
                 potStirred();
             }
@@ -155,7 +170,7 @@ public class Cauldron : LookInteractable
 
         //something to get the audioclip
 
-
+        bubbleVal = minBubbleVal;
         soundSource2.PlayOneShot(explosionSound);
         soundSource1.volume = soundLow;
 
@@ -164,6 +179,8 @@ public class Cauldron : LookInteractable
         isStirred = false;
         explosionParticles.Play();
         stirProgress = 0;
+
+       
     }
 
     void addIngredient(GameObject ingredient)
@@ -251,9 +268,15 @@ public class Cauldron : LookInteractable
         //var emitParams = new ParticleSystem.EmitParams();
         // emitParams.startColor = waterCol;
         //particle.Emit(emitParams, 10);
-        thisMat.color = waterCol;
+       // thisMat.color = waterCol;
+
+        //waterRenderer.material = thisMat;
+
+
+        //make something like. water change speed? idk
+        waterRenderer.material.SetColor("_Color", waterCol);
+
         
-        waterRenderer.material = thisMat;
 
         
 
@@ -263,12 +286,14 @@ public class Cauldron : LookInteractable
     void makeWaterEmissive()
     {
        // waterRenderer.material.SetColor("_EmissionColor", waterCol);
-        waterRenderer.material.EnableKeyword("_EMISSION");
+       // waterRenderer.material.EnableKeyword("_EMISSION");
     }
 
     void setWaterEmission(float amt)
     {
         waterRenderer.material.SetColor("_EmissionColor", new UnityEngine.Color(0, 0, 0)+ (waterCol*amt)); //changes the amount
+
+
     }
 
     void stopWaterEmission()

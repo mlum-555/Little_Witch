@@ -8,7 +8,7 @@ public class AudioHandler : MonoBehaviour
     public List<AudioClip> clipList = new List<AudioClip>();
 
 
-    public AudioClip fallSound, ghostSound, entranceSound, pickupSound;
+    public AudioClip fallSound, ghostSound, entranceSound, pickupSound, glassFallSound;
 
     public float ghostSoundLevel = 0.5f;
 
@@ -37,11 +37,20 @@ public class AudioHandler : MonoBehaviour
     }
 
 
-    public void objectFall(GameObject fallenObj)
+    public void objectFall(GameObject fallenObj, bool isGlass)
     {
 
-        
-        AudioSource.PlayClipAtPoint(fallSound, fallenObj.transform.position);
+
+        if (isGlass)
+        {
+            AudioSource.PlayClipAtPoint(glassFallSound, fallenObj.transform.position);
+
+        }
+        else
+        {
+            AudioSource.PlayClipAtPoint(fallSound, fallenObj.transform.position);
+
+        }
 
 
     }

@@ -4960,7 +4960,7 @@ MeshRenderer:
   m_Materials:
   - {fileID: 2100000, guid: 17b4435a38bc4e047bad12ff5dfb2cce, type: 2}
   - {fileID: -7237910873854212322, guid: 4b942f9b4e7c8d64f850e8acee55e303, type: 3}
-  - {fileID: 2100000, guid: cd98dedd32525274d8d8edcae2220c68, type: 2}
+  - {fileID: 2100000, guid: 10e4849c39edb684788c897b45e78773, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -5035,14 +5035,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c75e5d983c960704f876d78a9cf3d678, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  liquidMaterial: {fileID: 2100000, guid: cd98dedd32525274d8d8edcae2220c68, type: 2}
+  liquidMaterial: {fileID: 2100000, guid: 10e4849c39edb684788c897b45e78773, type: 2}
   mainCauldron: {fileID: 0}
   liquidCollider: {fileID: 0}
   mainSubmergeCollider: {fileID: 5845621919547561462}
   waterCol: {r: 0.34460846, g: 0.6132076, b: 0.3326362, a: 0}
-  thisRigidbody: {fileID: 5845621919947133095}
   emissive: 0
-  glowParticles: {fileID: 5845621920079773963}
+  emissiveStrength: 1
 --- !u!114 &5845621919947133093
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5243,3 +5242,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b74ac7cb10eedc040a685a19c97ea11a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isGlass: 1

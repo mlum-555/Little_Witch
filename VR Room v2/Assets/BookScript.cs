@@ -21,6 +21,8 @@ public class BookScript : MonoBehaviour
 
 
     public GameObject[] pages;
+    SkinnedMeshRenderer[] pageSkins;
+    Page[] actualPages;
 
 
     //start with pages 0 and 1
@@ -65,10 +67,21 @@ public class BookScript : MonoBehaviour
 
     void Start()
     {
+        pageSkins = new SkinnedMeshRenderer[pages.Length];
+        actualPages = new Page[pages.Length];
+        for(int  i = 0; i < pages.Length; i++)
+        {
+            pageSkins[i] = pages[i].GetComponent<SkinnedMeshRenderer>();
+            actualPages[i] = pages[i].GetComponent<Page>();
+            pages[i].SetActive(false);
+        }
+        pages[0].SetActive(true);
+        pages[1].SetActive(true);
+
         skinRender.SetBlendShapeWeight(0, 100 * bookAnimProgress);
 
-        page1Mesh.SetBlendShapeWeight(0, 100);
-        page2Mesh.SetBlendShapeWeight (0, 100);
+        pageSkins[0].SetBlendShapeWeight(0, 100);
+        pageSkins[1].SetBlendShapeWeight (0, 100);
 
         copyAnimProg(page1Secret, 1);
         copyAnimProg(page2Secret, 2);
@@ -101,6 +114,7 @@ public class BookScript : MonoBehaviour
 
         pages[(currPageIndex + 2) % pages.Length].SetActive(true);
         pages[(currPageIndex + 3) % pages.Length].SetActive(true);
+        Debug.Log("yeowch");
 
         //yeah ok so page 1 new should be just blendshapes 0; page 2 should follow page 1(?)
 
@@ -128,11 +142,8 @@ public class BookScript : MonoBehaviour
    
 
   
-   public void pageTurn()
+   public void pageTurnv0() //old
     {
-       
-
-
         page2Mesh.SetBlendShapeWeight(0, 0);
         page2Mesh.SetBlendShapeWeight(1, 100);
         page2Mesh.SetBlendShapeWeight(2, 0);
@@ -144,6 +155,43 @@ public class BookScript : MonoBehaviour
         copyAnimProg(page1Secret, 1);
         copyAnimProg(page2Secret, 2);
         StartCoroutine(PageTurnP1());
+
+    }
+    public void pageTurn()
+    {
+
+        pageSkins[currPageIndex].SetBlendShapeWeight(0, 0);
+        pageSkins[currPageIndex].SetBlendShapeWeight(1, 0);
+        pageSkins[currPageIndex].SetBlendShapeWeight(2, 0);
+
+
+
+        currPage2 = (currPageIndex + 1) % pages.Length;
+
+        pageSkins[currPage2].SetBlendShapeWeight(0, 0);
+        pageSkins[currPage2].SetBlendShapeWeight(1, 100);
+        pageSkins[currPage2].SetBlendShapeWeight(2, 0);
+
+
+
+
+
+        activateNextPages();
+
+
+        //turn page 4 here
+
+        int p3 = (currPageIndex + 2) % pages.Length;
+        int p4 = (currPageIndex + 3) % pages.Length;
+
+        pageSkins[p3].SetBlendShapeWeight(0, 0);
+        pageSkins[p3].SetBlendShapeWeight(1, 0);
+        pageSkins[p3].SetBlendShapeWeight(2, 0);
+
+        pageSkins[p4].SetBlendShapeWeight(0, 0);
+        pageSkins[p4].SetBlendShapeWeight(1, 0);
+        pageSkins[p4].SetBlendShapeWeight(2, 0);
+
 
         
     }
@@ -157,6 +205,7 @@ public class BookScript : MonoBehaviour
         page2Mesh.material = new Material(page2Mesh.material);
         //page2Mesh.material.mainTexture = pageTextureHolder.getPageTexture(pageTextureNum);
 
+        //get rid of this area
         /*
         if (pageTextureNum < pageTextureHolder.getTotalTextures())
         {
@@ -171,12 +220,19 @@ public class BookScript : MonoBehaviour
 
 
     //maybe put in an int; if it's negative, then uh
-    IEnumerator PageTurnP1()
+    IEnumerator PageTurnP1V0()
     {
         for(float i=0; i<=100; i+=Time.deltaTime*turnSpeedP2)
         {
-            page1Mesh.SetBlendShapeWeight(0, i);
-            page1Mesh.SetBlendShapeWeight(2, i);
+            pageSkins[currPageIndex].SetBlendShapeWeight(0, 0);
+            pageSkins[currPageIndex].SetBlendShapeWeight(1, 0);
+            pageSkins[currPageIndex].SetBlendShapeWeight(2, 0);
+
+            currPage2 = (currPageIndex + 1) % pages.Length;
+
+            pageSkins[currPage2].SetBlendShapeWeight(0, 0);
+            pageSkins[currPage2].SetBlendShapeWeight(1, 100);
+            pageSkins[currPage2].SetBlendShapeWeight(2, 0);
 
             if (i >= 100)
             {
@@ -190,6 +246,34 @@ public class BookScript : MonoBehaviour
         }
         
     }
+
+    IEnumerator PageTurnP1()
+    {
+        for (float i = 0; i <= 100; i += Time.deltaTime * turnSpeedP2)
+        {
+            pageSkins[currPageIndex].SetBlendShapeWeight(0, i);
+            pageSkins[currPageIndex].SetBlendShapeWeight(2, i);
+            currPage2 = (currPageIndex + 3) % pages.Length;
+            copyAnimProg(pageSkins[currPageIndex], pageSkins[currPage2]);
+
+
+            actualPages[currPageIndex].copyAnimProg();
+            actualPages[currPage2].copyAnimProg();
+
+
+            if (i >= 100)
+            {
+                StartCoroutine(PageTurnP2());
+                pageSkins[currPageIndex].SetBlendShapeWeight(0, 100);
+                pageSkins[currPageIndex].SetBlendShapeWeight(2, 100);
+                copyAnimProg(pageSkins[currPageIndex], pageSkins[currPage2]);
+                //ok we still need both pages; don't get rid of page 2; get a new set of pages, i guess
+            }
+            yield return new WaitForSeconds(PageTurnSpeed);
+        }
+
+    }
+    //don't animate the page 2 mesh at all. animate new page 1 mesh
 
     IEnumerator PageTurnP3333333()
     {
@@ -219,19 +303,24 @@ public class BookScript : MonoBehaviour
     {
         for (float i = 0; i <= 100; i += Time.deltaTime * turnSpeedP2)
         {
-            page1Mesh.SetBlendShapeWeight(0, 100-i);
-            page1Mesh.SetBlendShapeWeight(1, i);
-            page1Mesh.SetBlendShapeWeight(2, 100 - i);
+            pageSkins[currPageIndex].SetBlendShapeWeight(0, 100-i);
+            pageSkins[currPageIndex].SetBlendShapeWeight(1, i);
+            pageSkins[currPageIndex].SetBlendShapeWeight(2, 100 - i);
+
+            copyAnimProg(pageSkins[currPageIndex], pageSkins[currPage2]);
+
+            actualPages[currPageIndex].copyAnimProg();
+            actualPages[currPage2].copyAnimProg();
             if (i >= 100)
             {
-                page2Mesh.SetBlendShapeWeight(0, 0);
-                page2Mesh.SetBlendShapeWeight(1, 100);
-                page2Mesh.SetBlendShapeWeight(2, 0);
+                
 
-                page1Mesh.SetBlendShapeWeight(0, 0);
-                page1Mesh.SetBlendShapeWeight(1, 0);
-                page1Mesh.SetBlendShapeWeight(2, 0);
+                pageSkins[currPageIndex].SetBlendShapeWeight(0, 0);
+                pageSkins[currPageIndex].SetBlendShapeWeight(1, 0);
+                pageSkins[currPageIndex].SetBlendShapeWeight(2, 0);
 
+                copyAnimProg(pageSkins[currPageIndex], pageSkins[currPage2]);
+                deactivateOldPages();
             }
             yield return new WaitForSeconds(PageTurnSpeed);
         }
@@ -316,6 +405,16 @@ public class BookScript : MonoBehaviour
         }
     }
 
+    void copyAnimProg(SkinnedMeshRenderer basePage, SkinnedMeshRenderer newPage)
+    {
+            for (int i = 0; i < 3; i++)
+            {
+                newPage.SetBlendShapeWeight(i, basePage.GetBlendShapeWeight(i));
+               
+            } 
+    }
+
+
     void pageLeft()
     {
         if (pageAnimTimer < pageAnimDur)
@@ -328,6 +427,7 @@ public class BookScript : MonoBehaviour
         {
             pageAnimTimer = pageAnimDur;
             animatePage();
+            deactivateOldPages();
             resetPageAnimation();
             animatingPage = false;
         }
@@ -358,6 +458,7 @@ public class BookScript : MonoBehaviour
 
         if (bookAnimProgress == 0)
         {
+            activateNextPages();
             audioSource.PlayOneShot(pageTurnSound);
             resetPageAnimation() ;
             animatingPage = true;

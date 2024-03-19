@@ -50,7 +50,7 @@ public class SpoonScript : MonoBehaviour
 
         positionalSpeed = distancePerFrame * Time.deltaTime; // could be anything to scale frame => sec => hour
 
-        Debug.Log("SP pos speed: "+positionalSpeed.magnitude);
+       // Debug.Log("SP pos speed: "+positionalSpeed.magnitude);
 
         Quaternion angularDiff = transform.rotation * Quaternion.Inverse(lastRot);
 
@@ -59,7 +59,7 @@ public class SpoonScript : MonoBehaviour
 
         lastRot = transform.rotation;
 
-        Debug.Log("Spoon rotation speed: " + angularSpeed.magnitude);
+       // Debug.Log("Spoon rotation speed: " + angularSpeed.magnitude);
 
 
         
@@ -168,7 +168,7 @@ public class SpoonScript : MonoBehaviour
         {
             ownColliderList[i] = null;
         }
-        Debug.Log("spoon hit all of the colliders");
+       // Debug.Log("spoon hit all of the colliders");
         mainCauldron.potStirred();
 
 

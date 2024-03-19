@@ -5,15 +5,16 @@ using UnityEngine;
 public class Page : MonoBehaviour
 {
 
-    public SkinnedMeshRenderer secretPageRenderer;
+    SkinnedMeshRenderer secretPageRenderer;
 
-    public SkinnedMeshRenderer thisRenderer;
+    SkinnedMeshRenderer thisRenderer;
 
 
     // Start is called before the first frame update
     void Start()
     {
-        
+        thisRenderer = GetComponent<SkinnedMeshRenderer>();
+        secretPageRenderer = GetComponentInChildren<SkinnedMeshRenderer>();
     }
 
     // Update is called once per frame
@@ -22,7 +23,7 @@ public class Page : MonoBehaviour
         
     }
 
-    void copyAnimProg()
+   public void copyAnimProg()
     {
 
         secretPageRenderer.SetBlendShapeWeight(0, thisRenderer.GetBlendShapeWeight(0));

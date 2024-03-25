@@ -16,13 +16,10 @@ public class BookScript : MonoBehaviour
 
     float pageAnimProgress = 1f;
 
-    public GameObject page1, page2;
-    public SkinnedMeshRenderer page1Mesh, page2Mesh;
 
+    //public GameObject[] pages;
 
-    public GameObject[] pages;
-    SkinnedMeshRenderer[] pageSkins;
-    Page[] actualPages;
+    
 
 
     //start with pages 0 and 1
@@ -36,17 +33,11 @@ public class BookScript : MonoBehaviour
 
     
 
-    public SkinnedMeshRenderer page1Secret, page2Secret;
-
-
     public float PageTurnSpeed;
-
 
     bool halfwayReached = false;
 
     bool animatingPage;
-
-    GameObject newP1, newP2;
 
 
     public TextureCombiner pageTextureHolder;
@@ -62,35 +53,43 @@ public class BookScript : MonoBehaviour
     public float turnSpeedP2;
 
 
+    int currP1, currP2, nP1, nP2;
+
+
+    public GameObject[] pageObjs;
+
+    Page[] pages;
+    //yeah just store the actual page references internally
+    //you just need the game objects & page component, nothing more
+
+
     public AudioSource audioSource;
     public AudioClip pageTurnSound;
 
     void Start()
     {
-        pageSkins = new SkinnedMeshRenderer[pages.Length];
-        actualPages = new Page[pages.Length];
+        currP1 = 0;
+        currP2 = 1;
+        
+        pages = new Page[pageObjs.Length];
         for(int  i = 0; i < pages.Length; i++)
         {
-            pageSkins[i] = pages[i].GetComponent<SkinnedMeshRenderer>();
-            actualPages[i] = pages[i].GetComponent<Page>();
-            pages[i].SetActive(false);
+            pages[i] = pageObjs[i].GetComponent<Page>();
+            if (pages[i] == null) Debug.Log("page "+i+" null");
+
+            pageObjs[i].SetActive(false);
         }
-        pages[0].SetActive(true);
-        pages[1].SetActive(true);
+        pageObjs[0].SetActive(true);
+        pageObjs[1].SetActive(true);
 
         skinRender.SetBlendShapeWeight(0, 100 * bookAnimProgress);
 
-        pageSkins[0].SetBlendShapeWeight(0, 100);
-        pageSkins[1].SetBlendShapeWeight (0, 100);
 
-        copyAnimProg(page1Secret, 1);
-        copyAnimProg(page2Secret, 2);
+        pages[currP1].anim(0, 100);
+        pages[currP2].anim(0, 100);
+        currPageIndex = currP1;
 
-        page1Mesh.material = new Material(page1Mesh.material);
-       // page1Mesh.material.mainTexture = pageTextureHolder.getPageTexture(1);
 
-        page2Mesh.material = new Material(page2Mesh.material);
-      //  page2Mesh.material.mainTexture = pageTextureHolder.getPageTexture(0);
     }
 
 
@@ -108,231 +107,30 @@ public class BookScript : MonoBehaviour
   void activateNextPages()
     {
 
-        newP1 = pages[(currPageIndex+2) % pages.Length];
-        newP2 = pages[(currPageIndex+3) % pages.Length];
+        nP1 = (currPageIndex + 2) % pages.Length;
+        nP2=(currPageIndex + 3) % pages.Length;
+
         //values should wrap around if they go out of bounds
 
-        pages[(currPageIndex + 2) % pages.Length].SetActive(true);
-        pages[(currPageIndex + 3) % pages.Length].SetActive(true);
-        Debug.Log("yeowch");
-
-        //yeah ok so page 1 new should be just blendshapes 0; page 2 should follow page 1(?)
-
-
-        //also I think the uh what was it reverse thing isn't a good idea; wonder what else you could do
-
-
-
-        //maybe just instantiate new objects with the pages instead of making new ones each time???
-        //back up. you are going way too complicated on something inconsequential. leave this for now
-        //also you still never addressed the actual issue of reversing the pages
-
-        //uh what how am I supposed to um
-
+        pageObjs[nP1].SetActive(true);
+        pageObjs[nP2].SetActive(true);
     }
 
     void deactivateOldPages()
     {
         //deactivate page from current count & one above; 
-        pages[currPageIndex].SetActive(false);
-        pages[(currPageIndex+1) % pages.Length].SetActive(false);
+        pageObjs[currP1].SetActive(false);
+        pageObjs[currP2].SetActive(false);
 
-        currPageIndex = (currPageIndex + 2) % pages.Length;
+        currPageIndex = nP1;
+
+        currP1 = currPageIndex;
+        currP2 = (currPageIndex + 1) % pages.Length;
+
+
     }
    
 
-  
-   public void pageTurnv0() //old
-    {
-        page2Mesh.SetBlendShapeWeight(0, 0);
-        page2Mesh.SetBlendShapeWeight(1, 100);
-        page2Mesh.SetBlendShapeWeight(2, 0);
-
-        page1Mesh.SetBlendShapeWeight(0, 0);
-        page1Mesh.SetBlendShapeWeight(1, 0);
-        page1Mesh.SetBlendShapeWeight(2, 0);
-
-        copyAnimProg(page1Secret, 1);
-        copyAnimProg(page2Secret, 2);
-        StartCoroutine(PageTurnP1());
-
-    }
-    public void pageTurn()
-    {
-
-        pageSkins[currPageIndex].SetBlendShapeWeight(0, 0);
-        pageSkins[currPageIndex].SetBlendShapeWeight(1, 0);
-        pageSkins[currPageIndex].SetBlendShapeWeight(2, 0);
-
-
-
-        currPage2 = (currPageIndex + 1) % pages.Length;
-
-        pageSkins[currPage2].SetBlendShapeWeight(0, 0);
-        pageSkins[currPage2].SetBlendShapeWeight(1, 100);
-        pageSkins[currPage2].SetBlendShapeWeight(2, 0);
-
-
-
-
-
-        activateNextPages();
-
-
-        //turn page 4 here
-
-        int p3 = (currPageIndex + 2) % pages.Length;
-        int p4 = (currPageIndex + 3) % pages.Length;
-
-        pageSkins[p3].SetBlendShapeWeight(0, 0);
-        pageSkins[p3].SetBlendShapeWeight(1, 0);
-        pageSkins[p3].SetBlendShapeWeight(2, 0);
-
-        pageSkins[p4].SetBlendShapeWeight(0, 0);
-        pageSkins[p4].SetBlendShapeWeight(1, 0);
-        pageSkins[p4].SetBlendShapeWeight(2, 0);
-
-
-        
-    }
-
-
-    void nextPageTextures()
-    {
-        //no wait uhh ok so here's da plan
-        //get the last page's texture before you update it
-
-        page2Mesh.material = new Material(page2Mesh.material);
-        //page2Mesh.material.mainTexture = pageTextureHolder.getPageTexture(pageTextureNum);
-
-        //get rid of this area
-        /*
-        if (pageTextureNum < pageTextureHolder.getTotalTextures())
-        {
-            pageTextureNum++;
-        }
-        else pageTextureNum = 0;
-        */
-        
-        page1Mesh.material = new Material(page1Mesh.material);
-       //  page1Mesh.material.mainTexture = pageTextureHolder.getPageTexture(pageTextureNum);
-    }
-
-
-    //maybe put in an int; if it's negative, then uh
-    IEnumerator PageTurnP1V0()
-    {
-        for(float i=0; i<=100; i+=Time.deltaTime*turnSpeedP2)
-        {
-            pageSkins[currPageIndex].SetBlendShapeWeight(0, 0);
-            pageSkins[currPageIndex].SetBlendShapeWeight(1, 0);
-            pageSkins[currPageIndex].SetBlendShapeWeight(2, 0);
-
-            currPage2 = (currPageIndex + 1) % pages.Length;
-
-            pageSkins[currPage2].SetBlendShapeWeight(0, 0);
-            pageSkins[currPage2].SetBlendShapeWeight(1, 100);
-            pageSkins[currPage2].SetBlendShapeWeight(2, 0);
-
-            if (i >= 100)
-            {
-                StartCoroutine(PageTurnP2());
-                page1Mesh.SetBlendShapeWeight(0, 100);
-                page1Mesh.SetBlendShapeWeight(2, 100);
-
-                //ok we still need both pages; don't get rid of page 2; get a new set of pages, i guess
-            }
-            yield return new WaitForSeconds(PageTurnSpeed);
-        }
-        
-    }
-
-    IEnumerator PageTurnP1()
-    {
-        for (float i = 0; i <= 100; i += Time.deltaTime * turnSpeedP2)
-        {
-            pageSkins[currPageIndex].SetBlendShapeWeight(0, i);
-            pageSkins[currPageIndex].SetBlendShapeWeight(2, i);
-            currPage2 = (currPageIndex + 3) % pages.Length;
-            copyAnimProg(pageSkins[currPageIndex], pageSkins[currPage2]);
-
-
-            actualPages[currPageIndex].copyAnimProg();
-            actualPages[currPage2].copyAnimProg();
-
-
-            if (i >= 100)
-            {
-                StartCoroutine(PageTurnP2());
-                pageSkins[currPageIndex].SetBlendShapeWeight(0, 100);
-                pageSkins[currPageIndex].SetBlendShapeWeight(2, 100);
-                copyAnimProg(pageSkins[currPageIndex], pageSkins[currPage2]);
-                //ok we still need both pages; don't get rid of page 2; get a new set of pages, i guess
-            }
-            yield return new WaitForSeconds(PageTurnSpeed);
-        }
-
-    }
-    //don't animate the page 2 mesh at all. animate new page 1 mesh
-
-    IEnumerator PageTurnP3333333()
-    {
-        for (float i = 0; i <= 100; i += Time.deltaTime * turnSpeedP2)
-        {
-            page1Mesh.SetBlendShapeWeight(0, 100 - i);
-            page1Mesh.SetBlendShapeWeight(1, i);
-            page1Mesh.SetBlendShapeWeight(2, 100 - i);
-
-
-            if (i >= 100)
-            {
-                page2Mesh.SetBlendShapeWeight(0, 0);
-                page2Mesh.SetBlendShapeWeight(1, 100);
-                page2Mesh.SetBlendShapeWeight(2, 0);
-
-                page1Mesh.SetBlendShapeWeight(0, 0);
-                page1Mesh.SetBlendShapeWeight(1, 0);
-                page1Mesh.SetBlendShapeWeight(2, 0);
-
-            }
-            yield return new WaitForSeconds(PageTurnSpeed);
-        }
-    }
-
-    IEnumerator PageTurnP2() //override p2 with this if you want
-    {
-        for (float i = 0; i <= 100; i += Time.deltaTime * turnSpeedP2)
-        {
-            pageSkins[currPageIndex].SetBlendShapeWeight(0, 100-i);
-            pageSkins[currPageIndex].SetBlendShapeWeight(1, i);
-            pageSkins[currPageIndex].SetBlendShapeWeight(2, 100 - i);
-
-            copyAnimProg(pageSkins[currPageIndex], pageSkins[currPage2]);
-
-            actualPages[currPageIndex].copyAnimProg();
-            actualPages[currPage2].copyAnimProg();
-            if (i >= 100)
-            {
-                
-
-                pageSkins[currPageIndex].SetBlendShapeWeight(0, 0);
-                pageSkins[currPageIndex].SetBlendShapeWeight(1, 0);
-                pageSkins[currPageIndex].SetBlendShapeWeight(2, 0);
-
-                copyAnimProg(pageSkins[currPageIndex], pageSkins[currPage2]);
-                deactivateOldPages();
-            }
-            yield return new WaitForSeconds(PageTurnSpeed);
-        }
-    }
-
-
-    //uhhh
-
-
-
-
-  
 
 
     void sizeDown()
@@ -374,45 +172,19 @@ public class BookScript : MonoBehaviour
         bookAnimProgress = animTimer / animDur;
         skinRender.SetBlendShapeWeight(0, 100 * bookAnimProgress);
 
-        page1Mesh.SetBlendShapeWeight(0,100 * bookAnimProgress);
+        pages[currP1].anim(0,100 * bookAnimProgress);
         //page1Mesh.SetBlendShapeWeight(1, 100 * bookAnimProgress);
 
-        page2Mesh.SetBlendShapeWeight(0, 100 * bookAnimProgress);
-        page2Mesh.SetBlendShapeWeight(1, 100-(100 * bookAnimProgress));
-        //100 = fully closed
-        copyAnimProg(page1Secret, 1);
-        copyAnimProg(page2Secret, 2);
+        pages[currP2].anim(1, 100 * bookAnimProgress);
+
+
+        pages[currP2].anim(0, 100-(100 * bookAnimProgress));
+
+
+
+
     }
 
-    void copyAnimProg(SkinnedMeshRenderer otherPage, int x)
-    {
-
-        if(x == 1)
-        {
-            for (int i = 0; i < 3; i++)
-            {
-                otherPage.SetBlendShapeWeight(i, page1Mesh.GetBlendShapeWeight(i));
-
-             }
-        }
-        else
-        {
-            for (int i = 0; i < 3; i++)
-            {
-                otherPage.SetBlendShapeWeight(i, page2Mesh.GetBlendShapeWeight(i));
-
-            }
-        }
-    }
-
-    void copyAnimProg(SkinnedMeshRenderer basePage, SkinnedMeshRenderer newPage)
-    {
-            for (int i = 0; i < 3; i++)
-            {
-                newPage.SetBlendShapeWeight(i, basePage.GetBlendShapeWeight(i));
-               
-            } 
-    }
 
 
     void pageLeft()
@@ -436,20 +208,18 @@ public class BookScript : MonoBehaviour
 
     void resetPageAnimation()
     {
-        page1Mesh.SetBlendShapeWeight(0, 0);
-        page1Mesh.SetBlendShapeWeight(1, 0);
-        page1Mesh.SetBlendShapeWeight(2, 0);
+        pages[currP1].anim(0, 0);
+        pages[currP1].anim(1, 0);
+        pages[currP1].anim(2, 0);
 
-        page2Mesh.SetBlendShapeWeight(1, 100);
-        page2Mesh.SetBlendShapeWeight(0, 0);
+        pages[currP2].anim(1, 100);
+        pages[currP2].anim(0, 0);
 
-        copyAnimProg(page1Secret, 1);
-        copyAnimProg(page2Secret, 2);
+        pages[nP1].copyPageProg(pages[currP2]);
+        pages[nP2].copyPageProg(pages[currP1]);
 
         halfwayReached = false;
         pageAnimTimer = 0;
-
-        nextPageTextures();
     }
 
 
@@ -477,26 +247,23 @@ public class BookScript : MonoBehaviour
         pageAnimProgress = pageAnimTimer / pageAnimDur;
         if (!halfwayReached)
         {
-            page1Mesh.SetBlendShapeWeight(0, 100 * (pageAnimProgress*2));
-            page1Mesh.SetBlendShapeWeight(2, 100 * (pageAnimProgress * 2));
+            pages[currP1].anim(0, 100 * (pageAnimProgress*2));
+            pages[currP1].anim(2, 100 * (pageAnimProgress * 2));
             if (pageAnimProgress>=0.5) halfwayReached = true;
         }
 
         else
         {
-            page1Mesh.SetBlendShapeWeight(0, 200-(100 * (pageAnimProgress * 2)));
-            page1Mesh.SetBlendShapeWeight(2, 200 - (100 * (pageAnimProgress * 2)));
-            page1Mesh.SetBlendShapeWeight(1, (100 * (pageAnimProgress*2))-100);
+            pages[currP1].anim(0, 200-(100 * (pageAnimProgress * 2)));
+            pages[currP1].anim(2, 200 - (100 * (pageAnimProgress * 2)));
+            pages[currP1].anim(1, (100 * (pageAnimProgress*2))-100);
             
             //this looks jank because it snaps right to 50
         }
 
-        copyAnimProg(page1Secret, 1);
-        copyAnimProg(page2Secret, 2);
-        
-        //when pageAnimProgress reaches 1, then uhh
-
-        //set halfway reached false on initial call, or something?
+        pages[nP1].copyPageProg(pages[currP2]);
+        pages[nP2].copyPageProg(pages[currP1]);
+      
     }
 
 

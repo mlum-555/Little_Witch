@@ -14,6 +14,13 @@ public class Page : MonoBehaviour
     void Start()
     {
         thisRenderer = GetComponent<SkinnedMeshRenderer>();
+        if (thisRenderer == null) Debug.Log("null");
+        secretPageRenderer = GetComponentInChildren<SkinnedMeshRenderer>();
+    }
+
+    private void Awake()
+    {
+        thisRenderer = GetComponent<SkinnedMeshRenderer>();
         secretPageRenderer = GetComponentInChildren<SkinnedMeshRenderer>();
     }
 
@@ -29,8 +36,29 @@ public class Page : MonoBehaviour
         secretPageRenderer.SetBlendShapeWeight(0, thisRenderer.GetBlendShapeWeight(0));
     }
 
+    public void setAnimProg()
+    {
+
+    }
+    public void copyPageProg(Page otherPage)
+    {
+        for (int i = 0; i < 3; i++)
+        {
+            anim(i, otherPage.getWeight(i));
+
+        }
+    }
+
+    public float getWeight(int i)
+    {
+        return thisRenderer.GetBlendShapeWeight(i);
+    }
+
     public void anim(int i, float prog)
     {
+        
+        if (thisRenderer == null) Debug.Log("null");
+        thisRenderer.SetBlendShapeWeight(0, 100);
         thisRenderer.SetBlendShapeWeight(i, prog);
         copyAnimProg();
     }

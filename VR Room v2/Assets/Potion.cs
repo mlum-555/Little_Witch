@@ -61,7 +61,7 @@ public class Potion : LookInteractable
                 if (mats[i] == liquidMaterial)
                 {
                     waterMatNum = i;
-                    Debug.Log("water num found");
+                   // Debug.Log("water num found");
                     break;
                 }
             }

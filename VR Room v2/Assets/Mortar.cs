@@ -10,7 +10,7 @@ public class Mortar : MonoBehaviour
 
     public GameObject ingredientCircle;
 
-    public SphereCollider crushArea;
+   // public SphereCollider crushArea;
 
 
     public ParticleSystem dustParticles;
@@ -28,28 +28,34 @@ public class Mortar : MonoBehaviour
         
     }
 
-    void crushIngredient()
+    public void crushIngredient(GameObject toCrush)
     {
-        if(currIng != null)
+        if(currIng != null && currIng ==toCrush)
         {
-            if (thisRigidbody.velocity.magnitude > velocityThreshold)
-            {
+            
+            Renderer tempRend = currIng.GetComponent<Renderer>();
 
+            GameObject newCirc = Instantiate(ingredientCircle);
+            newCirc.SetActive(true);
 
-                //spawn in the dust according to the thing you crushed
+            Renderer ingRenderer = newCirc.GetComponent<Renderer>();
+                ingRenderer.material = new Material(tempRend.material);
+            //spawn in the dust according to the thing you crushed
+
+            //okay so no you want to make an instance of it, like a spawner I guess
+            
                 Destroy(currIng);
                 currIng = null;
 
-
-            }
         }
        
     }
 
+    //wait no it should like. create a crushed object. yeah
+
     //https://gamedev.stackexchange.com/questions/151670/how-to-detect-collision-occurring-on-a-child-object-from-a-parent-script
     void OnCollisionEnter(Collision collision)
     {
-        Collider myCollider = collision.GetContact(0).thisCollider;
 
         //wait uhh I'm not sure this actually shows the correct thing here
 
@@ -64,13 +70,14 @@ public class Mortar : MonoBehaviour
 
     private void OnCollisionExit(Collision collision)
     {
-        Collider myCollider = collision.GetContact(0).thisCollider;
-
-        if(collision.gameObject == currIng.gameObject)
+        if (collision != null && currIng !=null)
         {
-            currIng = null;
+            if (collision.gameObject == currIng.gameObject)
+            {
+                currIng = null;
+            }
         }
-
+        
     }
 
 }

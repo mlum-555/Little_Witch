@@ -84,9 +84,25 @@ public class BookScript : MonoBehaviour
 
         skinRender.SetBlendShapeWeight(0, 100 * bookAnimProgress);
 
+        resetPageAnimation();
+
 
         pages[currP1].anim(0, 100);
-        pages[currP2].anim(0, 100);
+
+
+        pages[currP1].anim(1, 0);
+
+
+        pages[currP1].anim(2, 0);
+        pages[currP2].copyPageProg(pages[currP1]);
+
+
+
+        ///wait so. ok page np1 shouldn't be moving at all.
+        ///
+        //let's see um. ok new p1 shouldn't copy curr p2. it should just stay at 0/0/0
+
+
         currPageIndex = currP1;
 
 
@@ -114,6 +130,19 @@ public class BookScript : MonoBehaviour
 
         pageObjs[nP1].SetActive(true);
         pageObjs[nP2].SetActive(true);
+
+
+        
+        
+    }
+
+    void setFlip()
+    {
+        pages[currP1].flipSecret(1);
+        pages[currP2].flipSecret(2);
+
+        pages[nP1].flipSecret(1);
+        pages[nP2].flipSecret(2);
     }
 
     void deactivateOldPages()
@@ -128,10 +157,13 @@ public class BookScript : MonoBehaviour
         currP2 = (currPageIndex + 1) % pages.Length;
 
 
+        //things are not resetting correctly; p1 is just going to um 100/0 at some point. why
     }
    
 
+    //page 2 should uhh be flipped
 
+    
 
     void sizeDown()
     {
@@ -172,16 +204,17 @@ public class BookScript : MonoBehaviour
         bookAnimProgress = animTimer / animDur;
         skinRender.SetBlendShapeWeight(0, 100 * bookAnimProgress);
 
-        pages[currP1].anim(0,100 * bookAnimProgress);
-        //page1Mesh.SetBlendShapeWeight(1, 100 * bookAnimProgress);
-
-        pages[currP2].anim(1, 100 * bookAnimProgress);
-
-
-        pages[currP2].anim(0, 100-(100 * bookAnimProgress));
+        //pages[currP1].anim(0,100 - (100 * bookAnimProgress));
+        pages[currP1].anim(0, 100 * bookAnimProgress);
 
 
 
+        //book: 100: closed; pages have 0:100 as closed
+
+
+        pages[currP2].anim(0, 100 * bookAnimProgress);
+
+        pages[currP2].anim(1, 100-(100 * bookAnimProgress));
 
     }
 
@@ -215,8 +248,9 @@ public class BookScript : MonoBehaviour
         pages[currP2].anim(1, 100);
         pages[currP2].anim(0, 0);
 
-        pages[nP1].copyPageProg(pages[currP2]);
-        pages[nP2].copyPageProg(pages[currP1]);
+       pages[nP1].copyPageProg(pages[currP1]); //wait whar
+
+        //the only ones that should be moving are *current page 1* and *new page 2*
 
         halfwayReached = false;
         pageAnimTimer = 0;
@@ -257,11 +291,19 @@ public class BookScript : MonoBehaviour
             pages[currP1].anim(0, 200-(100 * (pageAnimProgress * 2)));
             pages[currP1].anim(2, 200 - (100 * (pageAnimProgress * 2)));
             pages[currP1].anim(1, (100 * (pageAnimProgress*2))-100);
+            //ah. ok let's break this down:
+            //so it starts this at .5, and goes up to 1. this means it ends at -100 for 1
+            //starts at .wait no uh
+            //ok no it starts at 100, -100, then goes up to um. 100. this shouldn't be happening at all. oopsie daisy
+            //
+
+
+
             
             //this looks jank because it snaps right to 50
         }
 
-        pages[nP1].copyPageProg(pages[currP2]);
+        //pages[nP1].copyPageProg(pages[currP2]);
         pages[nP2].copyPageProg(pages[currP1]);
       
     }

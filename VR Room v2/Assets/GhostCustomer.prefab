@@ -5614,6 +5614,8 @@ MonoBehaviour:
   - {fileID: 2800000, guid: 9bbf7e4f504100848bcecdd07ec2c269, type: 3}
   - {fileID: 2800000, guid: 4642124450599cb409880194a0d529eb, type: 3}
   - {fileID: 2800000, guid: 01ecfdd7d10e1524e9129afd5ddbaee0, type: 3}
+  - {fileID: 2800000, guid: 69bbfdb183bfec0458cff46e3b33bbe3, type: 3}
+  - {fileID: 2800000, guid: eb94317b221b1eb4499c6f663929e4c3, type: 3}
   ghostMaterial: {fileID: 2100000, guid: 439fe942b0d633c4bb2989e847d48ba7, type: 2}
   desiredIngredients: []
   victoryParticles: {fileID: 6473502820795533311}

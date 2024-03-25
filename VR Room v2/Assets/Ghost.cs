@@ -81,6 +81,11 @@ public class Ghost : LookInteractable
 
     public float lookTurnSpeed = 0.5f;
 
+
+    public int specialGhost = 0;
+
+    const int anythingGhost = 1;
+
     [ContextMenu("reset")]
     void Start()
     {
@@ -97,18 +102,35 @@ public class Ghost : LookInteractable
         textBase.SetActive(false);
         Debug.Log("ghost start finished");
 
-        setPos(leaveDest.transform.position);
-        thisAgent.transform.rotation = leaveDest.transform.rotation;
+        
 
-        setNewDest(destination);
+       
 
         popupSign.SetActive(false);
         textBase.SetActive(false);
+    }
+    private void Awake()
+    {
+        customerHandler = FindObjectOfType<CustomerHandler>();
+        thisRenderer = GetComponent<Renderer>();
+        leaveDest = customerHandler.getExitPoint();
+
+        setPos(leaveDest.transform.position);
+
+        thisAgent.transform.rotation = leaveDest.transform.rotation;
+
+
+        destReached = false;
+
+        setNewDest(destination);
+        //I think there's something preventing em from leaving
+
     }
 
     // Update is called once per frame
     void Update()
     {
+        
         if (countingUp) sizeUp();
         else sizeDown();
 
@@ -156,6 +178,11 @@ public class Ghost : LookInteractable
 
     }
     //figure out time remaining via uh current size
+
+    public void startMoving()
+    {
+        setNewDest(destination);
+    }
 
     bool checkPos(GameObject dest) //check agent position against a destination
     {
@@ -254,17 +281,40 @@ public class Ghost : LookInteractable
         {
             if(thisPotion.emissive == true)
             {
-                Debug.Log("potion ingredients length " + thisPotion.getIngredients().Count);
-                HashSet<GameObject> tempSet1 = new HashSet<GameObject>(desiredIngredients);
 
-                HashSet<GameObject> tempSet2 = new HashSet<GameObject>(thisPotion.getIngredients());
-                Debug.Log("auugggggggggh " + tempSet2.Count);
-                //is there a way to check if the contents are the same even if the order is different
-                if (tempSet1.SetEquals(tempSet2))
-                {
-                    Debug.Log("aaaugh");
-                    orderFulfilled();
+                switch (specialGhost){
+                    case 0: //this is the default ghost return
+                        Debug.Log("potion ingredients length " + thisPotion.getIngredients().Count);
+                        HashSet<GameObject> tempSet1 = new HashSet<GameObject>(desiredIngredients);
+
+                        HashSet<GameObject> tempSet2 = new HashSet<GameObject>(thisPotion.getIngredients());
+                        Debug.Log("auugggggggggh " + tempSet2.Count);
+                        //is there a way to check if the contents are the same even if the order is different
+                        if (tempSet1.SetEquals(tempSet2))
+                        {
+                            Debug.Log("aaaugh");
+                            orderFulfilled();
+                        }
+                        break;
+                    case anythingGhost:
+                    {
+                            //anything ghost will take any completed potion.
+                            orderFulfilled();
+                            break;
+                    }
+
+                     
+
+
+                    
+
                 }
+                
+
+
+
+
+
             }
             
         }

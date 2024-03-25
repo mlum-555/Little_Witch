@@ -15,7 +15,17 @@ public class Page : MonoBehaviour
     {
         thisRenderer = GetComponent<SkinnedMeshRenderer>();
         if (thisRenderer == null) Debug.Log("null");
-        secretPageRenderer = GetComponentInChildren<SkinnedMeshRenderer>();
+
+        SkinnedMeshRenderer[] tempRend = GetComponentsInChildren<SkinnedMeshRenderer>();
+        foreach(SkinnedMeshRenderer skm in tempRend)
+        {
+            if (skm != thisRenderer)
+            {
+                secretPageRenderer = skm;
+            }
+            
+        }
+        
     }
 
     private void Awake()
@@ -33,13 +43,16 @@ public class Page : MonoBehaviour
    public void copyAnimProg()
     {
 
-        secretPageRenderer.SetBlendShapeWeight(0, thisRenderer.GetBlendShapeWeight(0));
+        for (int i = 0; i < 3; i++)
+        {
+
+            secretPageRenderer.SetBlendShapeWeight(i, thisRenderer.GetBlendShapeWeight(i));
+        }
+        ///wait just go into shader graph and reverse the texture there
+        //if page is page 2 then um yeah
+
     }
 
-    public void setAnimProg()
-    {
-
-    }
     public void copyPageProg(Page otherPage)
     {
         for (int i = 0; i < 3; i++)
@@ -58,8 +71,15 @@ public class Page : MonoBehaviour
     {
         
         if (thisRenderer == null) Debug.Log("null");
-        thisRenderer.SetBlendShapeWeight(0, 100);
         thisRenderer.SetBlendShapeWeight(i, prog);
         copyAnimProg();
     }
+
+
+    public void flipSecret(int i)//if it's a page 1 or 2
+    {
+        if(i==2) secretPageRenderer.material.SetFloat("_flipLevel", 1);
+        else if (i==1) secretPageRenderer.material.SetFloat("_flipLevel", 0);
+    }
+   
 }

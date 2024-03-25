@@ -18,7 +18,11 @@ public class CustomerHandler : MonoBehaviour
      * */
 
     public GameObject LeaveDest;
-    public Ghost[] CustomerList;
+
+    public GameObject[] ghosts;
+    Ghost[] customerList;
+
+
 
     int ghostCount = 0;
 
@@ -27,13 +31,21 @@ public class CustomerHandler : MonoBehaviour
 
     void Start()
     {
+
         audioHandler = FindFirstObjectByType<AudioHandler>();
 
-        foreach (Ghost g in CustomerList) //turn off all inactive ghosts
+        customerList = new Ghost[ghosts.Length];
+        for (int i = 0; i < ghosts.Length; i++)
         {
-            g.gameObject.SetActive(false);
+            customerList[i] = ghosts[i].GetComponentInChildren<Ghost>();
+            if (customerList[i] == null) Debug.Log("ghost not found");
 
+            customerList[i].gameObject.SetActive(false);
+            ghosts[i].SetActive(false);
+            //oh god wait no this is the same issue as last time wehre the thing fails
         }
+
+       
         firstGhost();
         
     }
@@ -55,24 +67,37 @@ public class CustomerHandler : MonoBehaviour
 
     void firstGhost()
     {
-        CustomerList[ghostCount].gameObject.SetActive(true);
-        CustomerList[ghostCount].setPos(LeaveDest.transform.position);
-        giveGhostSound(CustomerList[ghostCount].gameObject);
+        ghosts[ghostCount].gameObject.SetActive(true);
+        customerList[ghostCount].gameObject.SetActive(true);
 
+        //ohhh it's because um. the base is being set active before the other stuff? I think? I could be wrong
 
+        customerList[ghostCount].setPos(LeaveDest.transform.position);
+        //ok so position is being set here. now what
+        giveGhostSound(ghosts[ghostCount]);
+        customerList[ghostCount].startMoving();
     }
 
     public void nextGhost()
     {
-        CustomerList[ghostCount].gameObject.SetActive(false);
+        customerList[ghostCount].gameObject.SetActive(false);
+        ghosts[ghostCount].SetActive(false);
+
         ghostCount++;
-        CustomerList[ghostCount].gameObject.SetActive(true);
-        CustomerList[ghostCount].setPos(LeaveDest.transform.position);
+
+        ghosts[ghostCount].SetActive(true);
+        customerList[ghostCount].gameObject.SetActive(true);
+
+        customerList[ghostCount] = ghosts[ghostCount].GetComponentInChildren<Ghost>();
+
+        customerList[ghostCount].setPos(LeaveDest.transform.position);
 
         audioHandler.playEntrance(LeaveDest);
 
-        giveGhostSound(CustomerList[ghostCount].gameObject);
+        giveGhostSound(ghosts[ghostCount]);
         //also put them at the uhh starting position
+
+        //I think the problem is that the starting position should only be tied to um the   
     }
 
 

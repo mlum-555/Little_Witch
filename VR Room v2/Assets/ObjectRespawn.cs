@@ -13,9 +13,14 @@ public class ObjectRespawn : MonoBehaviour
     Vector3 startTrans;
     Quaternion startRot;
     public BoxCollider areaBounds;
+
+    AudioHandler audioHandler;
+
+    public ParticleSystem returnParticles;
     // Start is called before the first frame update
     void Start()
     {
+        audioHandler = FindAnyObjectByType<AudioHandler>();
         startTrans = transform.position;
         startRot = transform.rotation;  
     }
@@ -37,7 +42,15 @@ public class ObjectRespawn : MonoBehaviour
 
     void respawn()
     {
+        ParticleSystem retParts1 = Instantiate (returnParticles);
+        retParts1.transform.position = transform.position;
+        retParts1.gameObject.SetActive(true);
+
+        
+
         transform.position = startTrans;
         transform.rotation = startRot;
+        audioHandler.playPoof(this.gameObject);
+
     }
 }

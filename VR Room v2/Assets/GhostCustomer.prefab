@@ -5623,6 +5623,7 @@ MonoBehaviour:
   rewardDestination: {fileID: 0}
   talkHandler: {fileID: 679642307564598077}
   lookTurnSpeed: 0.5
+  specialGhost: 0
 --- !u!114 &679642307564598077
 MonoBehaviour:
   m_ObjectHideFlags: 0

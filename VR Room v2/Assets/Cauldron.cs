@@ -54,7 +54,7 @@ public class Cauldron : LookInteractable
     public AudioSource soundSource1, soundSource2;
     //1 is ambient, 2 is more action/incidental based, ex. explosions
 
-    public AudioClip explosionSound, stirSound, addSound, goodSound;
+    public AudioClip explosionSound, stirSound, addSound, goodSound, potionSplash, goodSplashNoise;
 
     public AudioClip basicCauldronSound, largeBubbling;
 
@@ -143,7 +143,7 @@ public class Cauldron : LookInteractable
     {
         
         UnityEngine.Color tempColor = waterCol;
-        resetPot();
+        potionPotReset();
         return tempColor;
     }
 
@@ -161,7 +161,9 @@ public class Cauldron : LookInteractable
 
     public void playStirSound()
     {
-        soundSource2.PlayOneShot(stirSound);
+        // soundSource2.PlayOneShot(stirSound);
+        soundSource2.clip = stirSound; 
+        soundSource2.Play();
         //might be good to have this as not one shot. lemme check
     }
 
@@ -171,16 +173,47 @@ public class Cauldron : LookInteractable
         //something to get the audioclip
 
         bubbleVal = minBubbleVal;
-        soundSource2.PlayOneShot(explosionSound);
+        
         soundSource1.volume = soundLow;
 
         clearIngredientList();
         stopWaterEmission();
         isStirred = false;
+
+        playPotionSound();
         explosionParticles.Play();
         stirProgress = 0;
+    }
 
-       
+
+    void potionPotReset()
+    {
+        //something to get the audioclip
+
+        bubbleVal = minBubbleVal;
+        playPotionSound();
+        soundSource1.volume = soundLow;
+
+        clearIngredientList();
+        stopWaterEmission();
+        isStirred = false;
+
+        
+        explosionParticles.Play();
+        stirProgress = 0;
+    }
+
+
+    void playPotionSound()
+    {
+        soundSource2.PlayOneShot(potionSplash);
+        if (isStirred)
+        {
+
+            soundSource2.PlayOneShot(goodSplashNoise);
+        }
+        else soundSource2.PlayOneShot(explosionSound);
+
     }
 
     void addIngredient(GameObject ingredient)
@@ -203,7 +236,7 @@ public class Cauldron : LookInteractable
 
                 if (!isStirred)
                 {
-                    soundSource2.PlayOneShot(addSound);
+                    soundSource2.PlayOneShot(addSound,0.5f);
                     currIngredients.Add(acceptedIngredients[i]);
                     Debug.Log("ingredients: " + currIngredients.Count);
                     addToColor(ingredientColors[i]);

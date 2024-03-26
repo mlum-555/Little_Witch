@@ -5035,7 +5035,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c75e5d983c960704f876d78a9cf3d678, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  liquidMaterial: {fileID: 2100000, guid: 10e4849c39edb684788c897b45e78773, type: 2}
+  liquidMaterial: {fileID: 7631912424702644503, guid: 4b942f9b4e7c8d64f850e8acee55e303,
+    type: 3}
   mainCauldron: {fileID: 0}
   liquidCollider: {fileID: 0}
   mainSubmergeCollider: {fileID: 5845621919547561462}

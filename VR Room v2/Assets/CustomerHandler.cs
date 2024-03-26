@@ -74,7 +74,7 @@ public class CustomerHandler : MonoBehaviour
 
         customerList[ghostCount].setPos(LeaveDest.transform.position);
         //ok so position is being set here. now what
-        giveGhostSound(ghosts[ghostCount]);
+        giveGhostSound(customerList[ghostCount].gameObject);
         customerList[ghostCount].startMoving();
     }
 
@@ -94,7 +94,7 @@ public class CustomerHandler : MonoBehaviour
 
         audioHandler.playEntrance(LeaveDest);
 
-        giveGhostSound(ghosts[ghostCount]);
+        giveGhostSound(customerList[ghostCount].gameObject);
         //also put them at the uhh starting position
 
         //I think the problem is that the starting position should only be tied to um the   

@@ -9,7 +9,8 @@ public class SoundObj : MonoBehaviour
 
     AudioHandler handler;
 
-    public bool isGlass;
+    public bool isGlass, isSolid;
+
     void Start()
     {
         handler = FindFirstObjectByType(typeof(AudioHandler)).GetComponent<AudioHandler>();
@@ -24,6 +25,11 @@ public class SoundObj : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
-        handler.objectFall(this.gameObject, isGlass) ;
+        //I know this is a dumb way to do it but it's less effort than making a switch & adapting everything to that
+        if(isSolid) handler.solidFall(this.gameObject) ;
+
+        else handler.objectFall(this.gameObject, isGlass);
     }
+
+
 }

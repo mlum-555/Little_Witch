@@ -8,7 +8,7 @@ public class AudioHandler : MonoBehaviour
     public List<AudioClip> clipList = new List<AudioClip>();
 
 
-    public AudioClip fallSound, ghostSound, entranceSound, pickupSound, glassFallSound;
+    public AudioClip fallSound, ghostSound, entranceSound, pickupSound, glassFallSound,gloveTightenSound, solidFallSound, poofSound,teleportSound;
 
     public float ghostSoundLevel = 0.5f;
 
@@ -55,6 +55,14 @@ public class AudioHandler : MonoBehaviour
 
     }
 
+    public void solidFall(GameObject fallenObj)
+    {
+        AudioSource.PlayClipAtPoint(solidFallSound, fallenObj.transform.position);
+    }
+    public void gloveTighten(GameObject glove)
+    {
+        AudioSource.PlayClipAtPoint(gloveTightenSound,glove.transform.position);
+    }
     public void playPickupSound(GameObject pickupObj)
     {
         AudioSource.PlayClipAtPoint(pickupSound, pickupObj.transform.position);
@@ -64,12 +72,24 @@ public class AudioHandler : MonoBehaviour
     {
         //placeholder here for just giving ghosts sound I guess
         AudioSource newSorc = obj.AddComponent<AudioSource>();
+        //ah. ok one sec
         newSorc.loop = true;
         newSorc.clip = ghostSound;
         newSorc.spatialBlend = 1;
         newSorc.volume = ghostSoundLevel;
         newSorc.Play();
         //HOW DO YOU DELETE OLD SOUND STUFF?
+    }
+
+    public void playPoof(GameObject obj)
+    {
+        AudioSource.PlayClipAtPoint(poofSound, obj.transform.position);
+    }
+
+
+    public void playTeleport (GameObject teleporter)
+    {
+        AudioSource.PlayClipAtPoint(teleportSound, teleporter.transform.position);
     }
 
     public void playEntrance(GameObject entrance)

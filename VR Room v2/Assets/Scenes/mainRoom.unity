@@ -71179,7 +71179,7 @@ Light:
   m_Type: 2
   m_Shape: 0
   m_Color: {r: 0.9811321, g: 0.79734874, b: 0.48593804, a: 1}
-  m_Intensity: 10.96
+  m_Intensity: 5.64
   m_Range: 13.009313
   m_SpotAngle: 30
   m_InnerSpotAngle: 21.80208
@@ -86025,9 +86025,9 @@ Transform:
   - {fileID: 489749430}
   - {fileID: 1848938567}
   - {fileID: 789390287}
-  - {fileID: 1819130907}
   - {fileID: 19760838}
   - {fileID: 883817388}
+  - {fileID: 1819130907}
   - {fileID: 841436395}
   - {fileID: 1591111550}
   - {fileID: 302315046}

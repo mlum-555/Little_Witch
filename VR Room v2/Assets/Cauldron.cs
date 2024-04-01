@@ -59,9 +59,8 @@ public class Cauldron : LookInteractable
     public AudioClip basicCauldronSound, largeBubbling;
 
 
-    float colorChangeInterval, colorChangeTimer, colorChangeVal; //set timer to -1 when not changing, or uhh hm
-    //
 
+    public float colorChangeDuration;
 
     void Start()
     {
@@ -297,24 +296,20 @@ public class Cauldron : LookInteractable
 
     void changeMatCol()
     {
-        // mainModule.startColor=waterCol;
-        //var emitParams = new ParticleSystem.EmitParams();
-        // emitParams.startColor = waterCol;
-        //particle.Emit(emitParams, 10);
-       // thisMat.color = waterCol;
-
-        //waterRenderer.material = thisMat;
-
-
-        //make something like. water change speed? idk
-        waterRenderer.material.SetColor("_Color", waterCol);
-
-        
-
-        
-
-        // particleMat.color = waterCol;
+        StartCoroutine(ColorInterp(waterRenderer.material.GetColor("_Color")));
     }
+
+    IEnumerator ColorInterp(UnityEngine.Color baseColor)
+    {
+        
+        for(float timer =0; timer< colorChangeDuration; timer += Time.deltaTime)
+        {
+            UnityEngine.Color tempCol = UnityEngine.Color.Lerp(baseColor, waterCol, timer/colorChangeDuration);
+            waterRenderer.material.SetColor("_Color", tempCol);
+            yield return null;
+        }
+    }
+
 
     void makeWaterEmissive()
     {

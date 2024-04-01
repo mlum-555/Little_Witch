@@ -5,6 +5,7 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Windows;
 using UnityEngine.AI;
+using UnityEngine.UI;
 
 public class Ghost : LookInteractable
 {
@@ -68,6 +69,9 @@ public class Ghost : LookInteractable
     // Start is called before the first frame update
 
 
+    public TextMeshPro errorText;
+    public float errorMessageDuration;
+
     bool rotating;
 
     CustomerHandler customerHandler;
@@ -86,11 +90,17 @@ public class Ghost : LookInteractable
 
     const int anythingGhost = 1;
 
+    EventHandler eventHandler;
+
     [ContextMenu("reset")]
     void Start()
     {
-       // desiredIngredients.Sort();
-       customerHandler = FindObjectOfType<CustomerHandler>();
+
+        
+        
+       
+        // desiredIngredients.Sort();
+        customerHandler = FindObjectOfType<CustomerHandler>();
 
         leaveDest = customerHandler.getExitPoint();
 
@@ -111,6 +121,8 @@ public class Ghost : LookInteractable
     }
     private void Awake()
     {
+
+        eventHandler = FindObjectOfType<EventHandler>();
         customerHandler = FindObjectOfType<CustomerHandler>();
         thisRenderer = GetComponent<Renderer>();
         leaveDest = customerHandler.getExitPoint();
@@ -124,6 +136,24 @@ public class Ghost : LookInteractable
 
         setNewDest(destination);
         //I think there's something preventing em from leaving
+        //or not um. what
+        //
+
+        StartCoroutine(destFailsafe());
+    }
+
+
+    [ContextMenu("go to destination")]
+   public void goToDest()
+    {
+        setNewDest(destination);
+    }
+
+    IEnumerator destFailsafe() //weird issue where 
+    {
+        for (float f = 0; f < 2; f += Time.deltaTime)
+            setNewDest(destination);
+        yield return null;
 
     }
 
@@ -183,6 +213,30 @@ public class Ghost : LookInteractable
     {
         setNewDest(destination);
     }
+
+
+   IEnumerator textFadeIn(TextMeshPro textBase)
+    {
+        for (float tempTimer = 0; tempTimer<errorMessageDuration; tempTimer += Time.deltaTime)
+        {
+            textBase.alpha = tempTimer / errorMessageDuration; //should equal 1
+
+            if(tempTimer>=errorMessageDuration) StartCoroutine(textFadeOut(textBase));
+            yield return null;
+        }
+
+    }
+
+    IEnumerator textFadeOut(TextMeshPro textBase)
+    {
+        for (float tempTimer = 0; tempTimer < errorMessageDuration; tempTimer += Time.deltaTime)
+        {
+            textBase.alpha = 1-(tempTimer / errorMessageDuration); //should equal 1
+            yield return null;
+        }
+
+    }
+
 
     bool checkPos(GameObject dest) //check agent position against a destination
     {
@@ -271,7 +325,23 @@ public class Ghost : LookInteractable
         //if not in the array size, just doesn't change the face
     }
 
+    void tempMessage(string msg) //displays a popup message
+    {
 
+        //play the popup text box
+
+
+        //add some sound here too
+
+        //set like a coroutine? enumerator? something like that
+
+        errorText.text = msg;
+
+
+        //errorText.CrossFadeColor(Color.white, errorMessageDuration, false, true) ;
+        StartCoroutine(textFadeIn(errorText));
+
+    }
 
 
     public void checkItem(GameObject heldItem)
@@ -288,14 +358,23 @@ public class Ghost : LookInteractable
                         HashSet<GameObject> tempSet1 = new HashSet<GameObject>(desiredIngredients);
 
                         HashSet<GameObject> tempSet2 = new HashSet<GameObject>(thisPotion.getIngredients());
-                        Debug.Log("auugggggggggh " + tempSet2.Count);
+                        
                         //is there a way to check if the contents are the same even if the order is different
                         if (tempSet1.SetEquals(tempSet2))
                         {
-                            Debug.Log("aaaugh");
+                            Debug.Log("Order Fulfilled");
                             orderFulfilled();
                         }
+                        else
+                        {
+                            tempMessage("This isn't what I ordered...");
+                        }
+
+
+
                         break;
+
+
                     case anythingGhost:
                     {
                             //anything ghost will take any completed potion.
@@ -303,20 +382,17 @@ public class Ghost : LookInteractable
                             break;
                     }
 
-                     
-
-
-                    
-
                 }
-                
-
-
-
-
-
+            }
+            else
+            {
+                tempMessage("Uh... I don't think this is stirred...");
             }
             
+        }
+        else
+        {
+            tempMessage("Thanks! ...Uh, what is this?");
         }
     }
 

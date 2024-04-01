@@ -12,6 +12,16 @@ public class EventHandler : MonoBehaviour
 
     bool[] eventBools;
 
+    const int BOOKPICKEDUP = 0, GAMEWON = 7;
+
+
+    /// <summary>
+
+    /// </summary>
+    /// 
+
+    public GameObject congratsScreen;
+
 
     // Start is called before the first frame update
     void Start()
@@ -31,6 +41,17 @@ public class EventHandler : MonoBehaviour
         Debug.Log("Event " + id+" complete");
 
         //wait um.... uhhh
+
+
+        switch (id)
+        {
+            case BOOKPICKEDUP:
+                break;
+            case GAMEWON:
+
+
+                break;
+        }
     }
 
 
@@ -42,6 +63,14 @@ public class EventHandler : MonoBehaviour
         }
       return false;
     }
+
+    void VictoryEvent()
+    {
+        //display victory text, etc etc
+
+        congratsScreen.SetActive(true);
+    }
+
 
     //list of events, check if completed
 }

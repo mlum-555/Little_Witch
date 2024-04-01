@@ -94,6 +94,8 @@ public class CustomerHandler : MonoBehaviour
 
         audioHandler.playEntrance(LeaveDest);
 
+        customerList[ghostCount].goToDest();
+
         giveGhostSound(customerList[ghostCount].gameObject);
         //also put them at the uhh starting position
 

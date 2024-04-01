@@ -7,6 +7,9 @@ public class teleportObj : MonoBehaviour
     // Start is called before the first frame update
 
     AudioHandler audioHandler;
+
+    public ParticleSystem teleportParticles;
+    //uhh wait no just. reticle reticle reticle
     void Start()
     {
         audioHandler = FindAnyObjectByType<AudioHandler>();

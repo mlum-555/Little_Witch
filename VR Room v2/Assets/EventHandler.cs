@@ -12,7 +12,7 @@ public class EventHandler : MonoBehaviour
 
     bool[] eventBools;
 
-    const int BOOKPICKEDUP = 0, GAMEWON = 7;
+    const int BOOKPICKEDUP = 0, TUTORIALFINISHED = 1, GAMEWON = 7;
 
 
     /// <summary>
@@ -22,10 +22,12 @@ public class EventHandler : MonoBehaviour
 
     public GameObject congratsScreen;
 
+    CustomerHandler customerHandler;
 
     // Start is called before the first frame update
     void Start()
     {
+        customerHandler = FindAnyObjectByType<CustomerHandler>();
         eventBools = new bool[totalEvents];
     }
 
@@ -49,6 +51,10 @@ public class EventHandler : MonoBehaviour
                 break;
             case GAMEWON:
 
+
+                break;
+            case TUTORIALFINISHED:
+                customerHandler.startupGhosts();
 
                 break;
         }

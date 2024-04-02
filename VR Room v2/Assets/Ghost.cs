@@ -6,6 +6,7 @@ using UnityEngine;
 using UnityEngine.Windows;
 using UnityEngine.AI;
 using UnityEngine.UI;
+using UnityEngine.Events;
 
 public class Ghost : LookInteractable
 {
@@ -26,6 +27,8 @@ public class Ghost : LookInteractable
     public string defaultText;
 
     public string[] textList;
+    public UnityEvent[] textEvents;
+    //
     public int startOfVictoryText;
     public int[] textFaces;
     int currentTextNum = -1;
@@ -88,9 +91,16 @@ public class Ghost : LookInteractable
 
     public int specialGhost = 0;
 
-    const int anythingGhost = 1;
+    const int anythingGhost = 1, QUICKGHOST = 2;
 
     EventHandler eventHandler;
+
+
+    public UnityEvent finalConditionEvent;
+   
+    bool finalCondition;
+
+
 
     [ContextMenu("reset")]
     void Start()
@@ -203,10 +213,11 @@ public class Ghost : LookInteractable
                 customerHandler.nextGhost();
             }
         }
-        //just check if y & z are correct
-
 
     }
+
+
+
     //figure out time remaining via uh current size
 
     public void startMoving()
@@ -237,7 +248,25 @@ public class Ghost : LookInteractable
 
     }
 
+    bool eventCheck()
+    {
+        if (finalConditionEvent==null) return true;
+        else
+        {
+            finalConditionEvent.Invoke(); //
+            return finalCondition;
+        }
+        
+        
+    }
+    public void setFinalConditionState(bool state) //to be called by other objects, events, etc.
+        //maybe you could send out an event which goes back and affects this?
+    {
+        finalCondition = state;
+    }
 
+
+    //ok so. final condition should just be tied to ghost by ghost so it should be on the script with the function or whatever
     bool checkPos(GameObject dest) //check agent position against a destination
     {
 
@@ -266,10 +295,7 @@ public class Ghost : LookInteractable
 
     void mainLocStart() //to be called when it reaches its main destinaiton
     {
-
-        //rotateAgent(destination.transform.rotation);
         popupSign.SetActive(true);
-
 
     }
 
@@ -283,14 +309,6 @@ public class Ghost : LookInteractable
     //set rotation regularly first, then uh actually
 
 
-    public void restartPath()
-    {
-        //dumbass you were supposed to change the position of the agent not the fuckin yknow
-    }
-
-
-    
-
 
     public void nextFace()
     {
@@ -300,7 +318,7 @@ public class Ghost : LookInteractable
         Material tempGhostMat = new Material(ghostMaterial);
         tempGhostMat.mainTexture = facesList[currentFace];
         thisRenderer.material = tempGhostMat;
-       // newTextBox();
+       
     }
 
     public void setPos(Vector3 newPos)
@@ -325,22 +343,10 @@ public class Ghost : LookInteractable
         //if not in the array size, just doesn't change the face
     }
 
-    void tempMessage(string msg) //displays a popup message
-    {
-
-        //play the popup text box
-
-
-        //add some sound here too
-
-        //set like a coroutine? enumerator? something like that
-
+    public void tempMessage(string msg) //displays a popup message
+    {     
         errorText.text = msg;
-
-
-        //errorText.CrossFadeColor(Color.white, errorMessageDuration, false, true) ;
         StartCoroutine(textFadeIn(errorText));
-
     }
 
 
@@ -351,17 +357,16 @@ public class Ghost : LookInteractable
         {
             if(thisPotion.emissive == true)
             {
+                Debug.Log("potion ingredients length " + thisPotion.getIngredients().Count);
+                HashSet<GameObject> tempSet1 = new HashSet<GameObject>(desiredIngredients);
 
+                HashSet<GameObject> tempSet2 = new HashSet<GameObject>(thisPotion.getIngredients());
                 switch (specialGhost){
                     case 0: //this is the default ghost return
-                        Debug.Log("potion ingredients length " + thisPotion.getIngredients().Count);
-                        HashSet<GameObject> tempSet1 = new HashSet<GameObject>(desiredIngredients);
-
-                        HashSet<GameObject> tempSet2 = new HashSet<GameObject>(thisPotion.getIngredients());
-                        
                         //is there a way to check if the contents are the same even if the order is different
-                        if (tempSet1.SetEquals(tempSet2))
+                        if (tempSet1.SetEquals(tempSet2) && eventCheck())
                         {
+                            
                             Debug.Log("Order Fulfilled");
                             orderFulfilled();
                         }
@@ -369,11 +374,7 @@ public class Ghost : LookInteractable
                         {
                             tempMessage("This isn't what I ordered...");
                         }
-
-
-
                         break;
-
 
                     case anythingGhost:
                     {
@@ -444,6 +445,7 @@ public class Ghost : LookInteractable
                     {
 
                         currentTextNum++;
+                        tryEvent(currentTextNum);
                         changeFace(currentTextNum);
                     }
                 }
@@ -452,6 +454,7 @@ public class Ghost : LookInteractable
                 {
                     writingText = true;
                     currentTextNum++;
+                    tryEvent(currentTextNum);
                     changeFace(currentTextNum);
                 }
 
@@ -467,12 +470,6 @@ public class Ghost : LookInteractable
 
 
             }
-
-           
-
-            
-
-
             StartCoroutine(writeWords());
 
         }
@@ -501,7 +498,7 @@ public class Ghost : LookInteractable
 
 
     [ContextMenu("fulfill order")]
-    void orderFulfilled()
+    public void orderFulfilled()
     {
         questCompleted = true;
         if (victoryParticles != null)
@@ -512,6 +509,15 @@ public class Ghost : LookInteractable
         newTextBox();
     }
 
+
+
+    void tryEvent(int i)
+    {
+        if (i < textEvents.Length)
+        {
+            textEvents[i].Invoke();
+        }
+    }
  
     void sizeDown()
     {
@@ -574,19 +580,10 @@ public class Ghost : LookInteractable
         //popupSign.transform.localScale = signBaseSize;
 
         countingUp = true;
-        
-        
 
     }
     //set sign scale as base; do a multiplier of its base vector, which you store at the start
-    void showPopup()
-    {
-
-    }
-    void hidePopup()
-    {
-
-    }
+ 
 
     public override void StopLookTrigger()
     {

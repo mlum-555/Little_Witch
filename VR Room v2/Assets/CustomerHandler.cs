@@ -44,9 +44,6 @@ public class CustomerHandler : MonoBehaviour
             ghosts[i].SetActive(false);
             //oh god wait no this is the same issue as last time wehre the thing fails
         }
-
-       
-        firstGhost();
         
     }
 
@@ -56,6 +53,12 @@ public class CustomerHandler : MonoBehaviour
         
     }
     //add a looping audio source, then destroy it?
+
+
+    public void startupGhosts()
+    {
+        firstGhost();
+    }
 
     void giveGhostSound(GameObject sorcGhost)
     {
@@ -69,13 +72,11 @@ public class CustomerHandler : MonoBehaviour
     {
         ghosts[ghostCount].gameObject.SetActive(true);
         customerList[ghostCount].gameObject.SetActive(true);
-
-        //ohhh it's because um. the base is being set active before the other stuff? I think? I could be wrong
-
         customerList[ghostCount].setPos(LeaveDest.transform.position);
-        //ok so position is being set here. now what
+       
         giveGhostSound(customerList[ghostCount].gameObject);
         customerList[ghostCount].startMoving();
+        audioHandler.playEntrance(LeaveDest);
     }
 
     public void nextGhost()
@@ -102,6 +103,18 @@ public class CustomerHandler : MonoBehaviour
         //I think the problem is that the starting position should only be tied to um the   
     }
 
+    void newGhost()
+    {
+        ghosts[ghostCount].gameObject.SetActive(true);
+        customerList[ghostCount].gameObject.SetActive(true);
+        customerList[ghostCount].setPos(LeaveDest.transform.position);
+
+        giveGhostSound(customerList[ghostCount].gameObject);
+        customerList[ghostCount].startMoving();
+        audioHandler.playEntrance(LeaveDest);
+        customerList[ghostCount].goToDest();
+
+    }
 
     //deactivate current ghost once they leave or something idk that's a stretch goal
     //for now just activate the new ghost & such

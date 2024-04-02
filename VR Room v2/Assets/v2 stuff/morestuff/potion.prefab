@@ -4837,7 +4837,7 @@ ParticleSystemRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: e823cd5b5d27c0f4b8256e7c12ee3e6d, type: 2}
+  - {fileID: 7631912424702644503, guid: 4b942f9b4e7c8d64f850e8acee55e303, type: 3}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -4960,7 +4960,7 @@ MeshRenderer:
   m_Materials:
   - {fileID: 2100000, guid: 17b4435a38bc4e047bad12ff5dfb2cce, type: 2}
   - {fileID: -7237910873854212322, guid: 4b942f9b4e7c8d64f850e8acee55e303, type: 3}
-  - {fileID: 2100000, guid: 10e4849c39edb684788c897b45e78773, type: 2}
+  - {fileID: 7631912424702644503, guid: 4b942f9b4e7c8d64f850e8acee55e303, type: 3}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -5244,3 +5244,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isGlass: 1
+  isSolid: 0

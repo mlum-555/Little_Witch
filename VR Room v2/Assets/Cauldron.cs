@@ -5,6 +5,7 @@ using System.Runtime.InteropServices.WindowsRuntime;
 using UnityEngine;
 using UnityEngine.Rendering.VirtualTexturing;
 using static UnityEngine.ParticleSystem;
+using UnityEngine.Events;
 
 public class Cauldron : LookInteractable
 {
@@ -61,6 +62,8 @@ public class Cauldron : LookInteractable
 
 
     public float colorChangeDuration;
+
+    public UnityEvent firstItemAdded;
 
     void Start()
     {
@@ -166,7 +169,7 @@ public class Cauldron : LookInteractable
         //might be good to have this as not one shot. lemme check
     }
 
-    void resetPot()
+    public void resetPot()
     {
 
         //something to get the audioclip
@@ -269,12 +272,14 @@ public class Cauldron : LookInteractable
 
     void addToColor(UnityEngine.Color newCol)
     {
-        if (currIngredients.Count == 0)
+        if (currIngredients.Count == 1)
         {
+            firstItemAdded.Invoke();
             waterCol = newCol;
         }
         else
         {
+            
             waterCol = (waterCol - (waterCol/currIngredients.Count)) + (newCol / currIngredients.Count);
         }
         changeMatCol();

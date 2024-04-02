@@ -106,7 +106,7 @@ public class EyeContact : LookInteractable
 
     public void ghostConditionCheck()
     {
-
+        
         //this would be called when the potion is given, or whatever.
         if (timer>0 && countingDown)
         {

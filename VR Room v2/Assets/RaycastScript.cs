@@ -39,9 +39,12 @@ public class RaycastScript : MonoBehaviour
 
     void sendRaycast()
     {
+        RaycastHit[] hits;
         RaycastHit hit;
+
         if(Physics.Raycast(myCam.transform.position,myCam.transform.forward, out hit, 10000))
         {
+            
             foreach(GameObject targ in targetList) 
             {
                 if (hit.collider && hit.collider.gameObject == targ)

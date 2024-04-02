@@ -23,6 +23,7 @@ public class RaycastScript : MonoBehaviour
 
     private GameObject currLookTarg;
 
+    public float raycastRadius = 5f;
    
     // Start is called before the first frame update
     void Start()
@@ -39,7 +40,7 @@ public class RaycastScript : MonoBehaviour
     void sendRaycast()
     {
         RaycastHit hit;
-        if(Physics.Raycast(myCam.transform.position,myCam.transform.forward, out hit, 1000))
+        if(Physics.Raycast(myCam.transform.position,myCam.transform.forward, out hit, 10000))
         {
             foreach(GameObject targ in targetList) 
             {

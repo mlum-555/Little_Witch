@@ -26,8 +26,11 @@ public class EyeContact : LookInteractable
 
     public ParticleSystem[] eyeParticles;
 
+    bool started;
+
     void Start()
     {
+        Debug.Log(eyeParticles.ToString());
         foreach (ParticleSystem e in eyeParticles)
         {
             e.Stop();
@@ -39,14 +42,22 @@ public class EyeContact : LookInteractable
     void Update()
     {
         timerText.text = timer.ToString("F2");
-        if (!eyeContactHeld && timer > 0)
+        if (!eyeContactHeld && timer > 0 && countingDown)
         {
             timer -= Time.deltaTime;
 
             if (timer <= 0) fail();
         }
     }
+    private void Awake()
+    {
+        resetTimer();
+        foreach (ParticleSystem e in eyeParticles)
+        {
+            Debug.Log("uh"+e.ToString());
 
+        }
+    }
     void fail()
     {
         baseGhost.tempMessage("Erm... did you forget about the customer?");
@@ -59,10 +70,7 @@ public class EyeContact : LookInteractable
         }
     }
 
-    private void Awake()
-    {
-        resetTimer();
-    }
+   
 
     void showTimer()
     {
@@ -76,8 +84,9 @@ public class EyeContact : LookInteractable
         countingDown = true;
         foreach(ParticleSystem e in eyeParticles) {
             e.Play();
-
         }
+        failed = false;
+
     }
 
 
@@ -89,7 +98,7 @@ public class EyeContact : LookInteractable
         }
         timer = timeLeniency;
         countingDown = false;
-        failed = false;
+        failed = true;
     }
 
     //problem: the potion couldn't also be reset. um. ok let's not worry about that
@@ -99,9 +108,9 @@ public class EyeContact : LookInteractable
     {
 
         //this would be called when the potion is given, or whatever.
-        if (countingDown)
+        if (timer>0 && countingDown)
         {
-            countingDown = false;
+
             foreach (ParticleSystem e in eyeParticles)
             {
                 e.Stop();
@@ -115,14 +124,30 @@ public class EyeContact : LookInteractable
 
 
     public override void LookTriggerThis() {
-        eyeContactHeld = true;
-        timer = timeLeniency;
 
+        if (countingDown)
+        {
+            eyeContactHeld = true;
+            timer = timeLeniency;
 
+            foreach (ParticleSystem e in eyeParticles)
+            {
+                e.Stop();
+
+            }
+        }
     }
 
     public override void StopLookTrigger()
     {
-        eyeContactHeld = false;
+        if (countingDown)
+        {
+            eyeContactHeld = false;
+            foreach (ParticleSystem e in eyeParticles)
+            {
+                e.Play();
+            }
+        }
+           
     }
 }

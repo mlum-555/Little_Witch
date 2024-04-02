@@ -43,7 +43,8 @@ public class Potion : LookInteractable
     // Start is called before the first frame update
     void Start()
     {
-
+        mainCauldron = FindAnyObjectByType<Cauldron>();
+        liquidCollider = mainCauldron.gameObject.GetComponent<SphereCollider>();
         glowParticles = GetComponentInChildren<ParticleSystem>();
 
         //make uh the view collider work with all potions, not just the one
@@ -112,7 +113,7 @@ public class Potion : LookInteractable
 
             //WAIT WHY DO YOU STILL HAVE THIS HERE
 
-            float baseAlph = mats[waterMatNum].GetColor("_TintColor").a;
+            float baseAlph = mats[waterMatNum].color.a;
 
 
             //mats[waterMatNum].color = mainCauldron.transferBrew();
@@ -121,12 +122,12 @@ public class Potion : LookInteractable
 
             newCol.a = baseAlph;
 
-            mats[waterMatNum].SetColor("_TintColor", newCol); //sets tint color, etc
+            //mats[waterMatNum].SetColor("_TintColor", newCol); //sets tint color, etc
+            mats[waterMatNum].color = newCol; //sets tint color, etc
 
 
-            
 
-            waterCol = mats[waterMatNum].GetColor("_TintColor");
+            //waterCol = mats[waterMatNum].GetColor("_TintColor");
             //WAIT nvm ok you did instantiate a new material and all that. guess the problem is in transferbrew if I were to guess. try it out rq
 
 
@@ -175,15 +176,15 @@ public class Potion : LookInteractable
         //oh. you didn't change water col. oops
 
 
-        /*
+        
         mats[waterMatNum].SetColor("_EmissionColor", waterCol);
         mats[waterMatNum].EnableKeyword("_EMISSION");
-        */
+        
 
         emissive = true;
 
-        mats[waterMatNum].SetFloat("_ReflectionStrength", emissiveStrength);
-
+        // mats[waterMatNum].SetFloat("_ReflectionStrength", emissiveStrength);
+       
 
     }
 
@@ -218,14 +219,14 @@ public class Potion : LookInteractable
         */
 
 
-        /*
+        
         mats[waterMatNum].SetColor("_EmissionColor", new UnityEngine.Color(0, 0, 0));
         mats[waterMatNum].EnableKeyword("_EMISSION");
 
-        */
+        
 
 
-        mats[waterMatNum].SetFloat("_ReflectionStrength", 0);
+       // mats[waterMatNum].SetFloat("_ReflectionStrength", 0);
 
         emissive = false;
         glowParticles.Stop();

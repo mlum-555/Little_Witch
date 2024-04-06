@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class LookInteractable : MonoBehaviour
 {
-
+    bool lookTriggered;
 
     // Start is called before the first frame update
     void Start()
@@ -19,5 +19,15 @@ public class LookInteractable : MonoBehaviour
     public virtual void StopLookTrigger()
     {
 
+    }
+
+    public bool isLookTriggered()
+    {
+        return lookTriggered;
+    }
+
+    public void setLookTriggerState(bool state)
+    {
+        lookTriggered = state;
     }
 }

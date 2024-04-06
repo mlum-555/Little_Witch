@@ -31,20 +31,18 @@ public class EyeContact : LookInteractable
     void Start()
     {
         Debug.Log(eyeParticles.ToString());
-        foreach (ParticleSystem e in eyeParticles)
-        {
-            e.Stop();
-
-        }
+        stopParticles();
     }
 
     // Update is called once per frame
     void Update()
     {
-        timerText.text = timer.ToString("F2");
+      if(timerText!=null) timerText.text = timer.ToString("F2");
         if (!eyeContactHeld && timer > 0 && countingDown)
         {
             timer -= Time.deltaTime;
+
+            playParticles();
 
             if (timer <= 0) fail();
         }
@@ -52,11 +50,7 @@ public class EyeContact : LookInteractable
     private void Awake()
     {
         resetTimer();
-        foreach (ParticleSystem e in eyeParticles)
-        {
-            Debug.Log("uh"+e.ToString());
-
-        }
+        stopParticles();
     }
     void fail()
     {
@@ -82,9 +76,6 @@ public class EyeContact : LookInteractable
     {
 
         countingDown = true;
-        foreach(ParticleSystem e in eyeParticles) {
-            e.Play();
-        }
         failed = false;
 
     }
@@ -124,29 +115,39 @@ public class EyeContact : LookInteractable
 
 
     public override void LookTriggerThis() {
+        Debug.Log("eye contact held");
 
-        if (countingDown)
-        {
             eyeContactHeld = true;
             timer = timeLeniency;
 
-            foreach (ParticleSystem e in eyeParticles)
-            {
-                e.Stop();
+        stopParticles();
+     
+    }
 
-            }
+    void stopParticles()
+    {
+        foreach (ParticleSystem e in eyeParticles)
+        {
+            if (e.isPlaying) e.Stop();
+
+        }
+    }
+
+    void playParticles()
+    {
+        foreach (ParticleSystem e in eyeParticles)
+        {
+            if(!e.isPlaying) e.Play();
         }
     }
 
     public override void StopLookTrigger()
     {
+        Debug.Log("eye contact stopped");
+        eyeContactHeld = false;
         if (countingDown)
         {
-            eyeContactHeld = false;
-            foreach (ParticleSystem e in eyeParticles)
-            {
-                e.Play();
-            }
+            playParticles();
         }
            
     }

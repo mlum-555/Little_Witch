@@ -75,6 +75,11 @@ public class AdvancingText : MonoBehaviour
         else backButton.SetActive(false);
     }
 
+    public void exitGame()
+    {
+        Application.Quit();
+
+    }
 
 
 

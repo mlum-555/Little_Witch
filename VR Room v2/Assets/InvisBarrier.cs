@@ -20,7 +20,7 @@ public class InvisBarrier : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
-        ParticleSystem tempParts =Instantiate(rejectionParticles,collision.gameObject.transform);
+        ParticleSystem tempParts =Instantiate(rejectionParticles,collision.gameObject.transform.position, collision.gameObject.transform.rotation);
         tempParts.gameObject.SetActive(true);
     }
 }

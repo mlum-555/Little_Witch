@@ -6191,7 +6191,7 @@ GameObject:
   - component: {fileID: 6122749133401609803}
   - component: {fileID: 679642307564598077}
   - component: {fileID: 6614798176497787183}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: GhostCustomer
   m_TagString: Customer
   m_Icon: {fileID: 0}

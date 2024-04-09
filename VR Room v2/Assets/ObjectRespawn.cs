@@ -18,6 +18,8 @@ public class ObjectRespawn : MonoBehaviour
 
     public bool enable;
 
+    public GameObject refObject;
+
     public ParticleSystem returnParticles;
     // Start is called before the first frame update
     void Start()

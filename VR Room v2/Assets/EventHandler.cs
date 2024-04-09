@@ -20,7 +20,11 @@ public class EventHandler : MonoBehaviour
     /// </summary>
     /// 
 
+    Skybox skybox;
+
     public GameObject congratsScreen;
+
+    public Color newSkyColor;
 
     CustomerHandler customerHandler;
 
@@ -29,18 +33,19 @@ public class EventHandler : MonoBehaviour
     {
         customerHandler = FindAnyObjectByType<CustomerHandler>();
         eventBools = new bool[totalEvents];
+        skybox = FindAnyObjectByType<Skybox>();
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+
     }
 
     public void completeEvent(int id)
     {
         eventBools[id] = true;
-        Debug.Log("Event " + id+" complete");
+        Debug.Log("Event " + id + " complete");
 
         //wait um.... uhhh
 
@@ -61,6 +66,17 @@ public class EventHandler : MonoBehaviour
     }
 
 
+    [ContextMenu("SkyboxChange")]
+    public void changeSkyboxColor()
+    {
+        if (skybox != null)
+        {
+            Material tempMat = new Material(skybox.material);
+            tempMat.color = newSkyColor;
+            skybox.material = tempMat;
+
+        }
+    }
     public bool checkEvent(int id)
     {
       if (eventBools[id])

@@ -236,7 +236,7 @@ public class Ghost : LookInteractable
         {
             textBase.alpha = tempTimer / errorMessageDuration; //should equal 1
 
-            if(tempTimer>=errorMessageDuration) StartCoroutine(textFadeOut(textBase));
+            if(tempTimer>=errorMessageDuration-0.02) StartCoroutine(textFadeOut(textBase));
             yield return null;
         }
 

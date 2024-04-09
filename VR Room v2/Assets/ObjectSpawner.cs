@@ -13,10 +13,15 @@ public class ObjectSpawner : XRBaseInteractable
     [SerializeField]
     private Transform transformToInstantiate;
 
+    public bool teleportVers;
+
     protected override void OnSelectEntered(SelectEnterEventArgs args)
     {
         // Instantiate object
-        GameObject newObject = Instantiate(grabbableObject, transformToInstantiate.position, Quaternion.identity);
+
+        GameObject newObject;
+        if (teleportVers == false) newObject = Instantiate(grabbableObject, transformToInstantiate.position, Quaternion.identity);
+        else newObject = grabbableObject;
             newObject.name = grabbableObject.name;
             newObject.SetActive(true);
 

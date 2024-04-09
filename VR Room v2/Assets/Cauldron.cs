@@ -172,7 +172,8 @@ public class Cauldron : LookInteractable
     public void playStirSound()
     {
         // soundSource2.PlayOneShot(stirSound);
-        soundSource2.clip = stirSound; 
+        soundSource2.clip = stirSound;
+        soundSource2.pitch = 1 + Random.Range(-0.3f, 0.3f);
         soundSource2.Play();
         //might be good to have this as not one shot. lemme check
     }

@@ -36,7 +36,7 @@ public class GhostTalk : MonoBehaviour
 
     AudioClip chooseClip()
     {
-        return talkClips[Random.Range(0, talkClips.Length-1)];
+        return talkClips[Random.Range(0, talkClips.Length)];
 
     }
 }

@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UIElements;
+using UnityEngine.XR.Interaction.Toolkit;
 using static UnityEngine.ParticleSystem;
 
 public class Potion : LookInteractable
@@ -125,7 +126,7 @@ public class Potion : LookInteractable
             //mats[waterMatNum].SetColor("_TintColor", newCol); //sets tint color, etc
             mats[waterMatNum].color = newCol; //sets tint color, etc
 
-
+            waterCol = newCol;
 
             //waterCol = mats[waterMatNum].GetColor("_TintColor");
             //WAIT nvm ok you did instantiate a new material and all that. guess the problem is in transferbrew if I were to guess. try it out rq
@@ -209,7 +210,11 @@ public class Potion : LookInteractable
 
         }
     }
-
+    public void lockPotion()
+    {
+        thisRigidbody.freezeRotation = true;
+        this.gameObject.GetComponent<XRGrabInteractable>().enabled = false;
+    }
 
     void stopWaterEmission()
     {

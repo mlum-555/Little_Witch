@@ -16,6 +16,8 @@ public class ObjectRespawn : MonoBehaviour
 
     AudioHandler audioHandler;
 
+    public bool enable;
+
     public ParticleSystem returnParticles;
     // Start is called before the first frame update
     void Start()
@@ -34,6 +36,7 @@ public class ObjectRespawn : MonoBehaviour
 
     private void OnTriggerExit(Collider other)
     {
+        if(enable)
         if (other == areaBounds)
         {
             respawn();

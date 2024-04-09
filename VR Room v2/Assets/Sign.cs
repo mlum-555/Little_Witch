@@ -10,4 +10,10 @@ public class Sign : XRBaseInteractable
     {
         parentGhost.clickOnSign();
     }
+
+    protected override void OnActivate(XRBaseInteractor interactor)
+    {
+        parentGhost.clickOnSign();
+        base.OnActivate(interactor);
+    }
 }

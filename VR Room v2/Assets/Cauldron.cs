@@ -86,6 +86,11 @@ public class Cauldron : LookInteractable
         //amount of changes needed or whatever for increasing stir?
     }
 
+    private void Awake()
+    {
+        waterRenderer = waterCircle.GetComponentInChildren<Renderer>();
+    }
+
     // Update is called once per frame
     void Update()
     {
@@ -143,8 +148,11 @@ public class Cauldron : LookInteractable
 
     public UnityEngine.Color transferBrew()
     {
-        
-        UnityEngine.Color tempColor = waterCol;
+
+        // UnityEngine.Color tempColor = waterCol;
+
+        UnityEngine.Color tempColor = waterRenderer.material.GetColor("_Color");
+        Debug.Log("Sent color: " + tempColor);
         potionPotReset();
         return tempColor;
     }
@@ -301,7 +309,12 @@ public class Cauldron : LookInteractable
 
     void changeMatCol()
     {
-        StartCoroutine(ColorInterp(waterRenderer.material.GetColor("_Color")));
+        if (waterRenderer == null) Debug.Log("watreendnull");
+        else
+        {
+            StartCoroutine(ColorInterp(waterRenderer.material.GetColor("_Color")));
+        }
+        
     }
 
     IEnumerator ColorInterp(UnityEngine.Color baseColor)
@@ -331,7 +344,7 @@ public class Cauldron : LookInteractable
 
     void stopWaterEmission()
     {
-        waterRenderer.material.SetColor("_EmissionColor", new UnityEngine.Color(0,0,0));
+        if(waterRenderer!=null)waterRenderer.material.SetColor("_EmissionColor", new UnityEngine.Color(0,0,0));
         glowParticles.Stop();
         //tempRenderer.material.EnableKeyword("_EMISSION");
     }

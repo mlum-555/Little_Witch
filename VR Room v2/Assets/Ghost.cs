@@ -7,6 +7,7 @@ using UnityEngine.Windows;
 using UnityEngine.AI;
 using UnityEngine.UI;
 using UnityEngine.Events;
+using UnityEngine.XR.Interaction.Toolkit;
 
 public class Ghost : LookInteractable
 {
@@ -170,9 +171,12 @@ public class Ghost : LookInteractable
     // Update is called once per frame
     void Update()
     {
+        if (destReached)
+        {
+            if (countingUp) sizeUp();
+            else sizeDown();
+        }
         
-        if (countingUp) sizeUp();
-        else sizeDown();
 
         if (rotating)
         {
@@ -248,9 +252,16 @@ public class Ghost : LookInteractable
 
     }
 
+
+    [ContextMenu("event check")]
     bool eventCheck()
     {
-        if (finalConditionEvent==null) return true;
+        if (finalConditionEvent == null || finalConditionEvent.GetPersistentEventCount()==0)
+        {
+            
+            Debug.Log("no final condition");
+            return true;
+        }
         else
         {
             finalConditionEvent.Invoke(); //
@@ -369,6 +380,7 @@ public class Ghost : LookInteractable
                             
                             Debug.Log("Order Fulfilled");
                             orderFulfilled();
+                            thisPotion.lockPotion();
                         }
                         else
                         {

@@ -31,6 +31,7 @@ public class GiveBox : MonoBehaviour
     void Start()
     {
         startingPoint= transform.position;
+        boxParts.Stop();
     }
 
     // Update is called once per frame

@@ -12,8 +12,8 @@ PlayerSettings:
   targetDevice: 2
   useOnDemandResources: 0
   accelerometerFrequency: 60
-  companyName: com.Unity.CreateWithVR
-  productName: CreateWithVR
+  companyName: LWA
+  productName: Little Witch Apothecary
   defaultCursor: {fileID: 0}
   cursorHotspot: {x: 0, y: 0}
   m_SplashScreenBackgroundColor: {r: 0.13725491, g: 0.12156863, b: 0.1254902, a: 1}
@@ -136,8 +136,11 @@ PlayerSettings:
     16:10: 1
     16:9: 1
     Others: 1
-  bundleVersion: 0.1.0
-  preloadedAssets: []
+  bundleVersion: 1.0.0
+  preloadedAssets:
+  - {fileID: 11400000, guid: ed72be55522c8448bae8b0d66fa21adf, type: 2}
+  - {fileID: -1997950804310270590, guid: ad4050bc0deda4e238354e959df0f1f4, type: 2}
+  - {fileID: -1553608217951419462, guid: b53b89ca9241447b0a56ff61fa931615, type: 2}
   metroInputSource: 0
   wsaTransparentSwapchain: 0
   m_HolographicPauseOnTrackingLoss: 1

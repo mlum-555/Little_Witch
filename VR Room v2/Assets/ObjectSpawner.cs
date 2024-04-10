@@ -13,7 +13,15 @@ public class ObjectSpawner : XRBaseInteractable
     [SerializeField]
     private Transform transformToInstantiate;
 
+    
     public bool teleportVers;
+
+    Ghost parentGhost;
+
+    private void Start()
+    {
+        parentGhost = GetComponentInParent<Ghost>();
+    }
 
     protected override void OnSelectEntered(SelectEnterEventArgs args)
     {
@@ -31,6 +39,10 @@ public class ObjectSpawner : XRBaseInteractable
         // Select object into same interactor
         interactionManager.SelectEnter(args.interactorObject, objectInteractable);
 
+        if (parentGhost != null) parentGhost.objectWasTaken();
+
         base.OnSelectEntered(args);
+
+        
     }
 }

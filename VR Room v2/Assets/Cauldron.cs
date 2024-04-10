@@ -266,7 +266,7 @@ public class Cauldron : LookInteractable
         //if not an accepted ingredient:
 
         
-        if(ingredient.name != "spoon")
+        if(ingredient.name != "spoon" && ingredient.name != "TextBasep2" && ingredient.name != "TextBase")
         {
             resetPot();
             ingredient.transform.position = rejectionRespawn.transform.position;

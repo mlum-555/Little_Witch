@@ -8,6 +8,7 @@ using UnityEngine.AI;
 using UnityEngine.UI;
 using UnityEngine.Events;
 using UnityEngine.XR.Interaction.Toolkit;
+using UnityEngine.Rendering;
 
 public class Ghost : LookInteractable
 {
@@ -101,7 +102,11 @@ public class Ghost : LookInteractable
    
     bool finalCondition;
 
+    bool objectTaken;
+    AudioSource localSource;
+    float baseVol;
 
+    float maxSpeed;
 
     [ContextMenu("reset")]
     void Start()
@@ -141,7 +146,7 @@ public class Ghost : LookInteractable
         setPos(leaveDest.transform.position);
 
         thisAgent.transform.rotation = leaveDest.transform.rotation;
-
+        maxSpeed = thisAgent.speed;
 
         destReached = false;
 
@@ -171,6 +176,10 @@ public class Ghost : LookInteractable
     // Update is called once per frame
     void Update()
     {
+        if (localSource != null) localSource.volume = (thisAgent.velocity.magnitude / maxSpeed) * baseVol; //volume of source changed based on how fast ghost is moving
+
+
+        //max movement speed?
         if (destReached)
         {
             if (countingUp) sizeUp();
@@ -229,6 +238,14 @@ public class Ghost : LookInteractable
         setNewDest(destination);
     }
 
+    public void setAudioSource(AudioSource src)
+    {
+        localSource = src;
+        baseVol = src.volume;
+    }
+
+   
+  
 
    IEnumerator textFadeIn(TextMeshPro textBase)
     {
@@ -332,6 +349,13 @@ public class Ghost : LookInteractable
        
     }
 
+    public void objectWasTaken()
+    {
+        objectTaken = true;
+        if (currentTextNum == giveItemTextNum) newTextBox();
+
+    }
+
     public void setPos(Vector3 newPos)
     {
         thisAgent.gameObject.transform.position = newPos;
@@ -361,7 +385,7 @@ public class Ghost : LookInteractable
     }
 
 
-    public void checkItem(GameObject heldItem)
+    public bool checkItem(GameObject heldItem)
     {
         Potion thisPotion = heldItem.GetComponent<Potion>();
         if(thisPotion != null)
@@ -381,6 +405,7 @@ public class Ghost : LookInteractable
                             Debug.Log("Order Fulfilled");
                             orderFulfilled();
                             thisPotion.lockPotion();
+                            return true;
                         }
                         else
                         {
@@ -392,7 +417,8 @@ public class Ghost : LookInteractable
                     {
                             //anything ghost will take any completed potion.
                             orderFulfilled();
-                            break;
+                            return true;
+                            
                     }
 
                 }
@@ -407,6 +433,7 @@ public class Ghost : LookInteractable
         {
             tempMessage("Thanks! ...Uh, what is this?");
         }
+        return false;
     }
 
     public void clickOnGhost()
@@ -460,6 +487,18 @@ public class Ghost : LookInteractable
                         tryEvent(currentTextNum);
                         changeFace(currentTextNum);
                     }
+                }
+
+                else if (currentTextNum == giveItemTextNum)
+                {
+                    if (objectTaken)
+                    {
+                        currentTextNum++;
+                        tryEvent(currentTextNum);
+                        changeFace(currentTextNum);
+                    }
+                    //don't advance
+
                 }
 
                 else if (currentTextNum < textList.Length - 1)

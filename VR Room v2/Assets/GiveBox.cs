@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.XR.Interaction.Toolkit;
 
 public class GiveBox : MonoBehaviour
 {
@@ -25,6 +26,8 @@ public class GiveBox : MonoBehaviour
     Vector3 startingPoint;
 
     // Start is called before the first frame update
+
+    bool noMoreParticles;
     void Start()
     {
         startingPoint= transform.position;
@@ -39,6 +42,7 @@ public class GiveBox : MonoBehaviour
             if (animTimer == animDur) heldObject.transform.position = holdPoint.transform.position;
             else sizeUp();
         }
+        if (noMoreParticles && boxParts.isPlaying) boxParts.Stop();
     }
 
     private void OnTriggerEnter(Collider other)
@@ -64,7 +68,15 @@ public class GiveBox : MonoBehaviour
             startingPoint = heldObject.transform.position;
             animTimer = 0;
             stopGiveParts();
-            parentGhost.checkItem(heldObject);
+
+            if (parentGhost.checkItem(heldObject))
+            {
+                noMoreParticles = true;
+              //  heldObject.SetActive(false);
+              //  XRGrabInteractable tempGrab = heldObject.GetComponent<XRGrabInteractable>();
+              //  if(tempGrab != null)tempGrab.enabled = false;
+              //  this.gameObject.SetActive(false);
+            }
         }
     }
 

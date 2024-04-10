@@ -64,7 +64,8 @@ public class CustomerHandler : MonoBehaviour
     {
         if (audioHandler != null)
         {
-            audioHandler.giveSound(sorcGhost);
+            Ghost tempGhost = sorcGhost.GetComponentInChildren<Ghost>();
+           tempGhost.setAudioSource(audioHandler.giveSound(sorcGhost));
         }
     }
 
@@ -75,8 +76,11 @@ public class CustomerHandler : MonoBehaviour
         customerList[ghostCount].setPos(LeaveDest.transform.position);
        
         giveGhostSound(customerList[ghostCount].gameObject);
+
         customerList[ghostCount].startMoving();
         audioHandler.playEntrance(LeaveDest);
+
+        
     }
 
     public void nextGhost()

@@ -68,7 +68,7 @@ public class AudioHandler : MonoBehaviour
         AudioSource.PlayClipAtPoint(pickupSound, pickupObj.transform.position);
     }
 
-    public void giveSound(GameObject obj)
+    public AudioSource giveSound(GameObject obj)
     {
         //placeholder here for just giving ghosts sound I guess
         AudioSource newSorc = obj.AddComponent<AudioSource>();
@@ -78,6 +78,7 @@ public class AudioHandler : MonoBehaviour
         newSorc.spatialBlend = 1;
         newSorc.volume = ghostSoundLevel;
         newSorc.Play();
+        return newSorc;
         //HOW DO YOU DELETE OLD SOUND STUFF?
     }
 

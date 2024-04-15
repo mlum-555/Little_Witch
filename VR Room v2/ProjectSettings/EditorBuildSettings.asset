@@ -9,11 +9,14 @@ EditorBuildSettings:
     path: Assets/Scenes/merritt_rrom.unity
     guid: 99c9720ab356a0642a771bea13969a05
   - enabled: 0
-    path: Assets/Scenes/mainRoom.unity
+    path: Assets/Scenes/Old Versions/mainRoom.unity
     guid: c0a7221a8874a794f8567ed782f67da3
-  - enabled: 1
-    path: Assets/Scenes/FixedMainScene.unity
+  - enabled: 0
+    path: Assets/Scenes/Old Versions/FixedMainScene.unity
     guid: a6e0e68d103089b45a0f0444cdab755c
+  - enabled: 1
+    path: Assets/Scenes/Final Scene.unity
+    guid: 219bea89fa04f764eb1a28a4497f60b1
   m_configObjects:
     Unity.XR.Oculus.Settings: {fileID: 11400000, guid: ed72be55522c8448bae8b0d66fa21adf,
       type: 2}
